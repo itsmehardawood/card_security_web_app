@@ -153,7 +153,7 @@ const PricingPage = () => {
             <div>
               <h3 className="text-lg font-semibold text-orange-800 mb-2">Overage Billing Details</h3>
               <p className="text-orange-700">
-                API calls exceeding your chosen plan's monthly limit will incur additional charges. The current overage rate is{' '}
+                API calls exceeding your chosen plans monthly limit will incur additional charges. The current overage rate is{' '}
                 <span className="font-semibold">$0.10 - $0.20 per extra API call</span>. These charges will be automatically added to your next monthly bill.
               </p>
             </div>
@@ -207,7 +207,7 @@ const PricingPage = () => {
               </div>
               <div className="bg-white/80 backdrop-blur-xl rounded-lg p-6 shadow-md">
                 <h4 className="font-semibold text-gray-900 mb-2">What happens if I exceed my API limit?</h4>
-                <p className="text-gray-600">You'll be charged overage fees as outlined above. We'll send you notifications as you approach your limit.</p>
+                <p className="text-gray-600">You will be charged overage fees as outlined above. We will send you notifications as you approach your limit.</p>
               </div>
             </div>
             <div className="space-y-6">

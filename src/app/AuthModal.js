@@ -4,12 +4,32 @@ import { useState } from 'react'
 export default function AuthModal() {
   const [currentView, setCurrentView] = useState('login')
   const [formData, setFormData] = useState({
+    fullName: '',
+    emailOrPhone: '',
     email: '',
-    password: '',
-    confirmPassword: '',
+    countryCode: '+1',
+    phone: '',
     businessName: '',
     businessLicense: null
   })
+
+  const countryCodes = [
+    { code: '+1', country: 'US/CA' },
+    { code: '+44', country: 'UK' },
+    { code: '+91', country: 'IN' },
+    { code: '+86', country: 'CN' },
+    { code: '+81', country: 'JP' },
+    { code: '+49', country: 'DE' },
+    { code: '+33', country: 'FR' },
+    { code: '+61', country: 'AU' },
+    { code: '+92', country: 'PK' },
+    { code: '+52', country: 'MX' },
+    { code: '+55', country: 'BR' },
+    { code: '+7', country: 'RU' },
+    { code: '+82', country: 'KR' },
+    { code: '+39', country: 'IT' },
+    { code: '+34', country: 'ES' }
+  ]
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target
@@ -25,7 +45,7 @@ export default function AuthModal() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+    <div className="min-h-screen text-black relative overflow-hidden flex items-center justify-center p-4">
       {/* Wavy Background Animation - Same as Landing Page */}
       <div className="fixed inset-0 z-0">
         {/* Base gradient */}
@@ -56,9 +76,9 @@ export default function AuthModal() {
               Login
             </button>
             <button
-              onClick={() => setCurrentView('signup')}
+              onClick={() => setCurrentView('business')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                currentView === 'signup' || currentView === 'business'
+                currentView === 'business'
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-600 hover:text-gray-800'
               }`}
@@ -70,7 +90,7 @@ export default function AuthModal() {
 
         {/* Login Form */}
         {currentView === 'login' && (
-          <div className='text-black' >
+          <div className='text-black'>
             <h2 className="text-xl font-semibold text-gray-700 mb-6 text-center">
               Login to Your Account
             </h2>
@@ -81,25 +101,11 @@ export default function AuthModal() {
                 </label>
                 <input
                   type="text"
-                  name="email"
-                  value={formData.email}
+                  name="emailOrPhone"
+                  value={formData.emailOrPhone}
                   onChange={handleInputChange}
                   placeholder="your@example.com or +1234567890"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder=""
-                  className="w-full px-3 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -110,93 +116,6 @@ export default function AuthModal() {
               >
                 Login
               </button>
-
-         
-            </div>
-          </div>
-        )}
-
-        {/* Sign Up Form */}
-        {currentView === 'signup' && (
-          <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-6 text-center">
-              Create Your Account
-            </h2>
-            
-            {/* Account Type Selection */}
-            <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-              <button
-                onClick={() => setCurrentView('signup')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'signup'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-              >
-                Individual
-              </button>
-              <button
-                onClick={() => setCurrentView('business')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'business'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-              >
-                Business
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email or Phone Number
-                </label>
-                <input
-                  type="text"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your@example.com or +1234567890"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors font-medium"
-              >
-                Sign Up as Individual
-              </button>
             </div>
           </div>
         )}
@@ -205,74 +124,64 @@ export default function AuthModal() {
         {currentView === 'business' && (
           <div>
             <h2 className="text-xl font-semibold text-gray-700 mb-6 text-center">
-              Create Your Account
+              Create Business Account
             </h2>
-            
-            {/* Account Type Selection */}
-            <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-              <button
-                onClick={() => setCurrentView('signup')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'signup'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-              >
-                Individual
-              </button>
-              <button
-                onClick={() => setCurrentView('business')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'business'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-              >
-                Business
-              </button>
-            </div>
 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email or Phone Number
+                  Full Name
                 </label>
                 <input
                   type="text"
-                  name="email"
-                  value={formData.email}
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleInputChange}
-                  placeholder="your@example.com or +1234567890"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="••••••••"
+                  placeholder="Enter your full name"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
+                  Email
                 </label>
                 <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="••••••••"
+                  placeholder="your@example.com"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    name="countryCode"
+                    value={formData.countryCode}
+                    onChange={handleInputChange}
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm"
+                  >
+                    {countryCodes.map((item) => (
+                      <option key={item.code} value={item.code}>
+                        {item.code} {item.country}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="1234567890"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
 
               <div>

@@ -60,10 +60,10 @@ const LandingPage = () => {
                   {item}
                 </a>
               ))}
-              <Link href="/" className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+              <Link href="/payments" className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
                 Buy Now
               </Link>
-              <Link href="/" className="border border-blue-950 text-blue-950 py-2 px-4 rounded-lg hover:bg-blue-950 hover:text-white transition duration-200">
+              <Link href="/login" className="border border-blue-950 text-blue-950 py-2 px-4 rounded-lg hover:bg-blue-950 hover:text-white transition duration-200">
                 Log in 
               </Link>
             </div>
@@ -371,7 +371,7 @@ const LandingPage = () => {
                 </h3>
                 <p className="text-lg opacity-90 leading-relaxed">
                   Stay ahead of the curve with a scalable platform designed
-                  for tomorrow's challenges.
+                  for tomorrow challenges.
                 </p>
               </div>
             </div>
@@ -396,7 +396,7 @@ const LandingPage = () => {
               exceed expectations and drive real results.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              With years of experience and a commitment to excellence, we're
+              With years of experience and a commitment to excellence, we are
               here to help you unlock your full potential and achieve your
               goals.
             </p>
@@ -416,7 +416,7 @@ const LandingPage = () => {
               exceed expectations and drive real results.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              With years of experience and a commitment to excellence, we're
+              With years of experience and a commitment to excellence, we are
               here to help you unlock your full potential and achieve your
               goals.
             </p>
