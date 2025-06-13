@@ -1,0 +1,217 @@
+import React from 'react';
+
+function HomeScreen({ status, setActiveTab }) {
+  // Function to get status-specific styling
+  const getStatusStyling = (currentStatus) => {
+    switch (currentStatus) {
+      case 'incomplete':
+        return {
+          bgColor: 'bg-red-50',
+          borderColor: 'border-red-200',
+          titleColor: 'text-red-900',
+          textColor: 'text-red-700',
+          icon: '🔴'
+        };
+      case 'pending':
+        return {
+          bgColor: 'bg-yellow-50',
+          borderColor: 'border-yellow-200',
+          titleColor: 'text-yellow-900',
+          textColor: 'text-yellow-700',
+          icon: '🟡'
+        };
+      case 'approved':
+        return {
+          bgColor: 'bg-blue-50',
+          borderColor: 'border-blue-200',
+          titleColor: 'text-blue-900',
+          textColor: 'text-blue-700',
+          icon: '🔵'
+        };
+      case 'active':
+        return {
+          bgColor: 'bg-green-50',
+          borderColor: 'border-green-200',
+          titleColor: 'text-green-900',
+          textColor: 'text-green-700',
+          icon: '🟢'
+        };
+      default:
+        return {
+          bgColor: 'bg-gray-50',
+          borderColor: 'border-gray-200',
+          titleColor: 'text-gray-900',
+          textColor: 'text-gray-700',
+          icon: '⚪'
+        };
+    }
+  };
+
+  // Function to get status message
+  const getStatusMessage = (currentStatus) => {
+    switch (currentStatus) {
+      case 'incomplete':
+        return 'Please complete your business profile';
+      case 'pending':
+        return 'Your application is under review';
+      case 'approved':
+        return 'Your account has been approved';
+      case 'active':
+        return 'Your account is fully active';
+      default:
+        return 'Status unknown';
+    }
+  };
+
+  const statusStyling = getStatusStyling(status);
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border p-6">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Welcome to Your Dashboard</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        
+        {/* Dynamic Status Card */}
+        <div className={`${statusStyling.bgColor} ${statusStyling.borderColor} p-4 rounded-lg border`}>
+          <div className="flex items-center mb-2">
+            <span className="text-lg mr-2">{statusStyling.icon}</span>
+            <h3 className={`font-semibold ${statusStyling.titleColor}`}>Account Status</h3>
+          </div>
+          <p className={`${statusStyling.textColor} capitalize font-medium mb-1`}>{status}</p>
+          <p className={`${statusStyling.textColor} text-sm`}>{getStatusMessage(status)}</p>
+          
+          {/* Action button based on status */}
+          {status === 'incomplete' && (
+            <button 
+              onClick={() => setActiveTab('profile')}
+              className="mt-3 px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Complete Now
+            </button>
+          )}
+          {status === 'pending' && (
+            <button 
+              onClick={() => setActiveTab('support')}
+              className="mt-3 px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm"
+            >
+              Contact Support
+            </button>
+          )}
+          {status === 'approved' && (
+            <button 
+              onClick={() => setActiveTab('subscriptions')}
+              className="mt-3 px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+            >
+              Choose Plan
+            </button>
+          )}
+          {status === 'active' && (
+            <button 
+              onClick={() => setActiveTab('balance')}
+              className="mt-3 px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+            >
+              View Balance
+            </button>
+          )}
+        </div>
+
+        {/* Quick Actions Card */}
+        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+          <div className="flex items-center mb-2">
+            <span className="text-lg mr-2">⚡</span>
+            <h3 className="font-semibold text-green-900">Quick Actions</h3>
+          </div>
+          <div className="space-y-2">
+            <button 
+              onClick={() => setActiveTab('profile')}
+              className="block text-green-700 hover:text-green-900 text-sm"
+            >
+              Complete Profile →
+            </button>
+            <button 
+              onClick={() => setActiveTab('documents')}
+              className="block text-green-700 hover:text-green-900 text-sm"
+            >
+              Upload Documents →
+            </button>
+            <button 
+              onClick={() => setActiveTab('developers')}
+              className="block text-green-700 hover:text-green-900 text-sm"
+            >
+              API Access →
+            </button>
+          </div>
+        </div>
+
+        {/* Support Card */}
+        <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+          <div className="flex items-center mb-2">
+            <span className="text-lg mr-2">💬</span>
+            <h3 className="font-semibold text-purple-900">Need Help?</h3>
+          </div>
+          <p className="text-purple-700 text-sm mb-3">Our support team is here to assist you</p>
+          <div className="space-y-2">
+            <button 
+              onClick={() => setActiveTab('support')}
+              className="block text-purple-700 hover:text-purple-900 text-sm"
+            >
+              Contact Support →
+            </button>
+            <a 
+              href="mailto:support@company.com"
+              className="block text-purple-700 hover:text-purple-900 text-sm"
+            >
+              Email: support@company.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Status-based Information */}
+      {status === 'incomplete' && (
+        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <h3 className="font-semibold text-red-900 mb-2">Complete Your Setup</h3>
+          <p className="text-red-700 text-sm mb-3">
+            To activate your account, please complete the following steps:
+          </p>
+          <ul className="space-y-1 text-red-700 text-sm">
+            <li>• Complete business profile information</li>
+            <li>• Upload required documents</li>
+            <li>• Verify your business details</li>
+          </ul>
+        </div>
+      )}
+
+      {status === 'pending' && (
+        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h3 className="font-semibold text-yellow-900 mb-2">Review in Progress</h3>
+          <p className="text-yellow-700 text-sm">
+            We're currently reviewing your application. This process typically takes 1-3 business days. 
+            We'll notify you once the review is complete.
+          </p>
+        </div>
+      )}
+
+      {status === 'approved' && (
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="font-semibold text-blue-900 mb-2">Account Approved!</h3>
+          <p className="text-blue-700 text-sm">
+            Congratulations! Your account has been approved. You can now choose a subscription plan 
+            and start using our services.
+          </p>
+        </div>
+      )}
+
+      {status === 'active' && (
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h3 className="font-semibold text-green-900 mb-2">Welcome! Your Account is Active</h3>
+          <p className="text-green-700 text-sm">
+            Your account is fully active and ready to use. Explore all the features available 
+            in your dashboard and don't hesitate to contact support if you need assistance.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default HomeScreen;
