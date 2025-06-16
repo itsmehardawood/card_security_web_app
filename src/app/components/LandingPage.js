@@ -528,7 +528,7 @@ const ProductsSection = () => {
             A fully integrated suite of payments products
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We bring together everything that's required to build websites and apps that accept payments 
+            We bring together everything that is required to build websites and apps that accept payments 
             and send payouts globally.
           </p>
         </div>

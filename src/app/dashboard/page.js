@@ -1,6 +1,6 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import BusinessScreen from '../components/Dashboard-Screens/BusinessScreen';
 import BalanceScreen from '../components/Dashboard-Screens/Balancescreen';
 import SubscriptionsScreen from '../components/Dashboard-Screens/SubscriptionScreen';
@@ -10,7 +10,20 @@ import DevelopersScreen from '../components/Dashboard-Screens/Developer';
 import Sidebar from '../components/Dashboard-Screens/Sidebar';
 import HomeScreen from '../components/Dashboard-Screens/Homescreen';
 
-function ClientDashboard() {
+// Loading component for Suspense fallback
+function DashboardLoader() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Loading dashboard...</p>
+      </div>
+    </div>
+  );
+}
+
+// Separate component that uses useSearchParams
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -193,14 +206,7 @@ function ClientDashboard() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardLoader />;
   }
 
   return (
@@ -240,6 +246,15 @@ function ClientDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component wrapped with Suspense
+function ClientDashboard() {
+  return (
+    <Suspense fallback={<DashboardLoader />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
 

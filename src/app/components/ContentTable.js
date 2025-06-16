@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from 'react';
 
-
 const ContentTable = ({ content, onEdit, onDelete, onView }) => {
   const [sortField, setSortField] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -193,7 +192,7 @@ const ContentTable = ({ content, onEdit, onDelete, onView }) => {
                 <td colSpan="6" className="px-4 py-8 text-center text-gray-500">
                   {searchTerm ? (
                     <div>
-                      <p>No content found matching "{searchTerm}"</p>
+                      <p>No content found matching &ldquo;{searchTerm}&rdquo;</p>
                       <button
                         onClick={() => setSearchTerm('')}
                         className="text-blue-600 hover:text-blue-800 text-sm mt-1"
@@ -285,7 +284,7 @@ const ContentTable = ({ content, onEdit, onDelete, onView }) => {
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>
               Showing {filteredContent.length} of {content.length} items
-              {searchTerm && ` (filtered by "${searchTerm}")`}
+              {searchTerm && ` (filtered by &ldquo;${searchTerm}&rdquo;)`}
             </span>
             
             {selectedItems.length > 0 && (

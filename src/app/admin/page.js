@@ -315,7 +315,7 @@ const APIDocumentationSection = () => (
         <div>
           <h3 className="font-medium text-gray-800 mb-3">Quick Integration</h3>
           <div className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm">
-            <div className="mb-2 text-gray-400">// Content API Example</div>
+            <div className="mb-2 text-gray-400">{/* Content API Example */}</div>
             <pre className="whitespace-pre-wrap">{`fetch('/api/content', {
   method: 'POST',
   headers: {

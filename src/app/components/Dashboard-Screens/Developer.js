@@ -69,7 +69,7 @@ function DevelopersScreen() {
                 </div>
               </div>
               <div className="text-xs text-gray-500">
-                ⚠️ Keep your API key secure and don't share it publicly
+                ⚠️ Keep your API key secure and don&apos;t share it publicly
               </div>
             </div>
           )}

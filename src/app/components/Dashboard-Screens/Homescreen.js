@@ -185,8 +185,8 @@ function HomeScreen({ status, setActiveTab }) {
         <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <h3 className="font-semibold text-yellow-900 mb-2">Review in Progress</h3>
           <p className="text-yellow-700 text-sm">
-            We're currently reviewing your application. This process typically takes 1-3 business days. 
-            We'll notify you once the review is complete.
+            We are currently reviewing your application. This process typically takes 1-3 business days. 
+            We will notify you once the review is complete.
           </p>
         </div>
       )}
@@ -206,7 +206,7 @@ function HomeScreen({ status, setActiveTab }) {
           <h3 className="font-semibold text-green-900 mb-2">Welcome! Your Account is Active</h3>
           <p className="text-green-700 text-sm">
             Your account is fully active and ready to use. Explore all the features available 
-            in your dashboard and don't hesitate to contact support if you need assistance.
+            in your dashboard and do not hesitate to contact support if you need assistance.
           </p>
         </div>
       )}

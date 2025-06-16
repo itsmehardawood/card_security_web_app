@@ -249,7 +249,7 @@ export default function SignUpPage() {
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify your phone</h2>
                   <p className="text-sm text-gray-600">
-                    We've sent a 6-digit code to {formData.countryCode} {formData.phone}
+                    We have sent a 6-digit code to {formData.countryCode} {formData.phone}
                   </p>
                 </div>
 
@@ -282,7 +282,7 @@ export default function SignUpPage() {
 
                 <div className="text-center mt-6 space-y-2">
                   <p className="text-sm text-gray-600">
-                    Didn't receive the code?{' '}
+                    Did not receive the code?{' '}
                     <button className="font-medium text-blue-600 hover:text-blue-500">
                       Resend
                     </button>

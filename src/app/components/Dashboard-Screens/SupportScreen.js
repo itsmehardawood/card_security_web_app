@@ -98,7 +98,7 @@ function SupportScreen() {
               </div>
               <div>
                 <h4 className="font-medium text-sm">How to upload documents?</h4>
-                <p className="text-gray-600 text-xs">Go to Documents section and click "Upload New" button.</p>
+                <p className="text-gray-600 text-xs">Go to Documents section and click Upload New button.</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
@@ -107,7 +107,7 @@ function SupportScreen() {
               </div>
               <div>
                 <h4 className="font-medium text-sm">How to add funds to my account?</h4>
-                <p className="text-gray-600 text-xs">Visit the Balance section and click "Add Funds".</p>
+                <p className="text-gray-600 text-xs">Visit the Balance section and click Add Funds.</p>
               </div>
             </div>
           </div>

@@ -144,10 +144,6 @@ const ContentManagement = () => {
     setEditingItem(null);
   };
 
-
-
-
-
   const handleSyncToAPI = async () => {
     if (window.confirm('This will sync all current content to the API. Continue?')) {
       await saveToAPI(content);
@@ -189,9 +185,6 @@ const ContentManagement = () => {
               {/* Action Buttons */}
               {!showForm && (
                 <>
-
-             
-                  
                   <button
                     onClick={handleSyncToAPI}
                     className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm"
@@ -210,8 +203,7 @@ const ContentManagement = () => {
             </div>
           </div>
         </div>
-
-          </div>
+      </div>
 
       {/* Main Content Area */}
       {showForm ? (
@@ -248,7 +240,7 @@ const ContentManagement = () => {
           <div className="p-4 bg-gray-900">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-green-400 text-sm font-mono">
-                // API Endpoint Data ({content.length} items)
+                {/* API Endpoint Data ({content.length} items) */}
               </span>
               <button
                 onClick={() => navigator.clipboard.writeText(JSON.stringify(content, null, 2))}

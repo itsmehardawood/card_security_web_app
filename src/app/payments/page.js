@@ -186,7 +186,7 @@ export default function PricingPage() {
                 Included features
               </h2>
               <h3 className="text-2xl sm:text-3xl font-bold mb-4">
-                What's included with standard pricing
+                What is included with standard pricing
               </h3>
               <p className="text-gray-600 mb-6 max-w-xl text-sm sm:text-base">
                 Get access to industry-leading features, along with
