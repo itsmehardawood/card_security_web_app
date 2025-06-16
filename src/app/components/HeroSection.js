@@ -64,7 +64,7 @@ const DiagonalHeroSection = () => {
       {/* Content Container */}
       <div className="relative z-10 min-h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mx-10">
             
             {/* Left Content Section */}
             <div className="space-y-6 text-center lg:text-left pt-0 lg:pt-20 md:pt-10 ">
