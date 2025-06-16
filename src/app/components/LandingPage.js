@@ -423,7 +423,7 @@ const LandingPage = () => {
         </div>
 
         {/* Newsletter signup */}
-        <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-2xl p-8 mb-12 backdrop-blur-sm border border-gray-700/50">
+        {/* <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-2xl p-8 mb-12 backdrop-blur-sm border border-gray-700/50">
           <div className="text-center max-w-2xl mx-auto">
             <h3 className="text-xl font-semibold mb-3">Stay Updated</h3>
             <p className="text-gray-300 mb-6">Get the latest security updates and features delivered to your inbox.</p>
@@ -438,7 +438,7 @@ const LandingPage = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Bottom section */}
         <div className="border-t border-gray-700/50 pt-8">
