@@ -64,11 +64,11 @@ const DiagonalHeroSection = () => {
       {/* Content Container */}
       <div className="relative z-10 min-h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mx-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 lg:mx-30 items-center mx-5">
             
             {/* Left Content Section */}
             <div className="space-y-6 text-center lg:text-left pt-0 lg:pt-20 md:pt-10 ">
-              <h1 className="text-5xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-[78px] font-extrabold text-gray-900 drop-shadow-lg leading-tight max-w-full lg:max-w-[85%]">
+              <h1 className="text-[44px] sm:text-6xl md:text-5xl lg:text-5xl xl:text-[70px] font-extrabold text-gray-900 drop-shadow-lg leading-tight max-w-full lg:max-w-[85%]">
                 Financial infrastructure to grow your revenue
               </h1>
               

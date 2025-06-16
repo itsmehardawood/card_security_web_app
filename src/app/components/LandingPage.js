@@ -15,7 +15,7 @@ const Navbar = () => {
         block: 'start'
       });
     }
-    setIsMenuOpen(false); // Close mobile menu after clicking
+    setIsMenuOpen(false); 
   };
 
   return (
@@ -214,7 +214,7 @@ const LandingPage = () => {
       <section className="py-16 px-6 bg-white">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-            See Our Project in Action
+            See Our Project in Action 
           </h2>
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-900 rounded-2xl overflow-hidden shadow-2xl">
