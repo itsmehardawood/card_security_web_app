@@ -51,7 +51,7 @@ function Navbar() {
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
                     <div className="pt-4 pb-3 border-t border-gray-200">
-                  <Link href="#" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 text-base font-medium">
+                  <Link href="/login" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 text-base font-medium">
                     Sign in
                   </Link>
                   <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium mx-3 mt-2">

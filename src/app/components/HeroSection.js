@@ -5,98 +5,69 @@ import React from 'react';
 
 const DiagonalHeroSection = () => {
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Diagonal Background Sections */}
-      <div className="absolute inset-0">
-        {/* Upper Gradient Section */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-pink-500 to-yellow-400"
-          style={{
-            clipPath: 'polygon(0 0, 100% 0, 100% 28%, 0 80%)'
-          }}
+    <div className="relative  bg-white w-full overflow-hidden">
+      {/* Video Background Layer */}
+      <div className="absolute top-0 left-0 w-full h-[490px] md:h-[600px] xl:h-[610px] lg:h-[600px] z-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
         >
-          {/* Base animated gradient */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-br from-purple-300 via-pink-300 to-orange-400 opacity-70"
-            style={{
-              animation: 'gradientShift 12s ease-in-out infinite',
-              filter: 'blur(1px)'
-            }}
-          />
-          
-          {/* Secondary color layer */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-tr from-blue-300 via-purple-500 to-pink-500 opacity-50"
-            style={{
-              animation: 'gradientShift2 15s ease-in-out infinite reverse',
-              filter: 'blur(2px)'
-            }}
-          />
-          
-          {/* Tertiary flowing layer */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 opacity-40"
-            style={{
-              animation: 'gradientFlow 18s ease-in-out infinite',
-              filter: 'blur(3px)'
-            }}
-          />
-          
-          {/* Smooth overlay blend */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-bl from-red-600 via-blue- to-yellow-400 opacity-30"
-            style={{
-              animation: 'gradientPulse 10s ease-in-out infinite',
-              filter: 'blur(1.5px)'
-            }}
-          />
-        </div>
-        
-        {/* Lower White Section */}
-        <div 
-          className="absolute inset-0 bg-white"
-          style={{
-            clipPath: 'polygon(0 80%, 100% 60%, 100% 100%, 0 100%)'
-          }}
-        />
+          <source src="/videos/animation.mp4" type="video/mp4" />
+        </video>
+
+        {/* Optional overlay to control video visibility */}
+        <div className="absolute inset-0 bg-white/5"></div>
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 min-h-screen flex items-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 lg:mx-30 items-center mx-5">
+      {/* Content Container - Now properly centered */}
+      <div className="relative z-10 min-h-screen flex pt-44 lg:pt-20 xl:pt-20 md:pt-20 justify-center">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             
             {/* Left Content Section */}
-            <div className="space-y-6 text-center lg:text-left pt-0 lg:pt-20 md:pt-10 ">
-              <h1 className="text-[44px] sm:text-6xl md:text-5xl lg:text-5xl xl:text-[70px] font-extrabold text-gray-900 drop-shadow-lg leading-tight max-w-full lg:max-w-[85%]">
+            <div className="space-y-4 md:text-left lg:text-left pt-0 lg:pt-20 md:pt-10">
+              <h1 className="text-[50px] text-gray-900 sm:text-6xl md:text-5xl lg:text-5xl xl:text-[73px] font-extrabold lg:text-gray-900 md:text-gray-900 drop-shadow-lg leading-tight max-w-full xl:max-w-[100%]">
                 Financial infrastructure to grow your revenue
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl lg:text-gray-900 leading-relaxed drop-shadow-md max-w-full sm:max-w-2xl lg:max-w-lg mx-auto lg:mx-0">
-                Experience innovation like never before with our cutting-edge solutions. 
-                Build, scale, and succeed with technology that adapts to your vision.
+              <p className="lg:text-[16px] text-black sm:text-lg md:text-xl lg:text-gray-900 leading-relaxed drop-shadow-md max-w-full sm:max-w-2xl lg:max-w-lg  lg:mx-0">
+            Join the millions of companies that use Card App to accept payments online and in person, embed financial services, power custom revenue models, and build a more profitable business.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-                <Link href="/payments" className=" hidden lg:block md:block group relative px-6 sm:px-8 py-3 sm:py-4 bg-blue-700 text-white font-semibold rounded-full hover:bg-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-sm sm:text-base">
-                  <span className="relative z-10">Get Started</span>
+              <div className="flex flex-row  gap-4  lg:justify-start">
+                <Link href="/payments" className=" lg:block md:block group relative px-6 sm:px-8 py-1 flex items-center bg-slate-900 text-white font-semibold rounded-full hover:bg-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-sm sm:text-base">
+                  <span className="relative z-10">Start now  {" >"}</span>
                 </Link>
                 
-                <button className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-gray-800 lg:border-white text-black font-semibold rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm text-sm sm:text-base">
+                <button className="px-6 sm:px-8 py-2 sm:py-1 border-2 border-gray-800 lg:border-white text-black font-semibold rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm text-sm sm:text-base">
                   Learn More
                 </button>
               </div>
             </div>
 
             {/* Right Content Section */}
-            <div className="space-y-8  hidden lg:block lg:justify-end mt-8 lg:mt-0">
-              <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-full">
+            <div className="space-y-8 hidden lg:block lg:justify-end mt-8 lg:mt-0">
+              <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-full relative">
+                
+                {/* Background image */}
+                <Image 
+                  src="/images/image.png" 
+                  width={900} 
+                  height={800} 
+                  alt="background decoration"
+                  className="absolute top-2 right left-64 w-full h-auto object-contain opacity-90 z-0"
+                />
+                
+                {/* Main hero image */}
                 <Image 
                   src="/images/heroimg.png" 
                   width={900} 
                   height={800} 
                   alt="hero img"
-                  className="w-full h-auto object-contain"
+                  className="relative z-10 w-full h-auto opacity-95 right-9 top-4 object-contain"
                   priority
                 />
               </div>
@@ -104,92 +75,6 @@ const DiagonalHeroSection = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .absolute.inset-0:first-child > div:first-child {
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 0 85%) !important;
-          }
-          .absolute.inset-0:first-child > div:last-child {
-            clip-path: polygon(0 85%, 100% 70%, 100% 100%, 0 100%) !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .absolute.inset-0:first-child > div:first-child {
-            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 90%) !important;
-          }
-          .absolute.inset-0:first-child > div:last-child {
-            clip-path: polygon(0 90%, 100% 75%, 100% 100%, 0 100%) !important;
-          }
-        }
-        
-        @keyframes gradientPulse {
-          0%, 100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 0.6;
-          }
-        }
-        
-        @keyframes gradientShift {
-          0%, 100% {
-            opacity: 0.7;
-            filter: blur(1px) hue-rotate(0deg);
-          }
-          25% {
-            opacity: 0.5;
-            filter: blur(2px) hue-rotate(90deg);
-          }
-          50% {
-            opacity: 0.8;
-            filter: blur(1.5px) hue-rotate(180deg);
-          }
-          75% {
-            opacity: 0.6;
-            filter: blur(2.5px) hue-rotate(270deg);
-          }
-        }
-        
-        @keyframes gradientShift2 {
-          0%, 100% {
-            opacity: 0.5;
-            filter: blur(2px) hue-rotate(0deg) saturate(1.2);
-          }
-          33% {
-            opacity: 0.7;
-            filter: blur(1px) hue-rotate(120deg) saturate(1.5);
-          }
-          66% {
-            opacity: 0.4;
-            filter: blur(3px) hue-rotate(240deg) saturate(0.8);
-          }
-        }
-        
-        @keyframes gradientFlow {
-          0%, 100% {
-            opacity: 0.4;
-            filter: blur(3px) hue-rotate(0deg) brightness(1);
-          }
-          20% {
-            opacity: 0.6;
-            filter: blur(2px) hue-rotate(72deg) brightness(1.2);
-          }
-          40% {
-            opacity: 0.3;
-            filter: blur(4px) hue-rotate(144deg) brightness(0.9);
-          }
-          60% {
-            opacity: 0.7;
-            filter: blur(1.5px) hue-rotate(216deg) brightness(1.1);
-          }
-          80% {
-            opacity: 0.5;
-            filter: blur(2.5px) hue-rotate(288deg) brightness(1.3);
-          }
-        }
-      `}</style>
     </div>
   );
 };

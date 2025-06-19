@@ -268,7 +268,7 @@ const ContentTable = ({ content, onEdit, onDelete, onView }) => {
                         title="Delete content"
                       >
                         Delete
-                      </button>
+                      </button>  
                     </div>
                   </td>
                 </tr>

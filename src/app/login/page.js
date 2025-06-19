@@ -10,92 +10,278 @@ export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState('')
   const [otp, setOtp] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [otpError, setOtpError] = useState('')
+  const [loginData, setLoginData] = useState(null) // Store login response data
+  const [formData, setFormData] = useState({
+    countryCode: '+1', // Default country code
+  })
 
-  const handleSignIn = (e) => {
+  const countryCodes = [
+    { code: '+1', country: '🇺🇸 US', flag: '🇺🇸' },
+    { code: '+1', country: '🇨🇦 CA', flag: '🇨🇦' },
+    { code: '+44', country: '🇬🇧 UK', flag: '🇬🇧' },
+    { code: '+91', country: '🇮🇳 IN', flag: '🇮🇳' },
+    { code: '+86', country: '🇨🇳 CN', flag: '🇨🇳' },
+    { code: '+81', country: '🇯🇵 JP', flag: '🇯🇵' },
+    { code: '+49', country: '🇩🇪 DE', flag: '🇩🇪' },
+    { code: '+33', country: '🇫🇷 FR', flag: '🇫🇷' },
+    { code: '+92', country: '🇵🇰 PK', flag: '🇵🇰' }
+  ]
+
+  const handleCountryCodeChange = (e) => {
+    setFormData({
+      ...formData,
+      countryCode: e.target.value
+    })
+  }
+
+  const handleSignIn = async (e) => {
     e.preventDefault()
+    
     if (!isOtpMode) {
-      // Switch to OTP mode
-      setIsOtpMode(true)
+      // First step: Send login request to get OTP
+      setLoading(true)
+      setError('')
+
+      try {
+        // Use the working object format
+        const requestBody = {
+          country_code: formData.countryCode,
+          login_input: emailOrPhone
+        }
+
+        console.log('Sending request body:', JSON.stringify(requestBody, null, 2))
+
+        const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        })
+
+        const data = await response.json()
+        console.log('Response data:', data)
+
+        if (response.ok && data.status) {
+          // Success - OTP sent, show OTP form
+          setLoginData(data)
+          setIsOtpMode(true)
+          console.log('Login OTP sent:', data)
+        } else {
+          // Handle API errors
+          console.error('API Error:', data)
+          setError(data.message || `Login failed (${response.status}). Please check your credentials.`)
+        }
+      } catch (err) {
+        console.error('Login error:', err)
+        setError('Network error. Please check your connection and try again.')
+      } finally {
+        setLoading(false)
+      }
     } else {
-      // Handle OTP verification
-      console.log('Verifying OTP:', otp)
-      // Add your OTP verification logic here
+      // Second step: Verify OTP
+      handleOtpVerification()
     }
   }
+
+const handleOtpVerification = async () => {
+  setLoading(true)
+  setOtpError('')
+
+  try {
+    // Updated to send email and otp as keys
+    const requestBody = {
+      email: emailOrPhone,  // Changed from login_input to email
+      otp: otp              // Keep otp as is
+    }
+
+    const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+
+    const data = await response.json()
+
+    if (response.ok && data.status) {
+      // OTP verified successfully
+      console.log('Login successful:', data)
+      
+      // Store auth token if provided
+      if (data.token) {
+        if (rememberMe) {
+          localStorage.setItem('authToken', data.token)
+        } else {
+          sessionStorage.setItem('authToken', data.token)
+        }
+      }
+      
+      // Store user data if provided
+      if (data.user) {
+        const storageMethod = rememberMe ? localStorage : sessionStorage
+        storageMethod.setItem('userData', JSON.stringify(data.user))
+      }
+
+      // Redirect to dashboard
+      router.push('/dashboard')
+    } else {
+      setOtpError(data.message || 'Invalid OTP. Please try again.')
+    }
+  } catch (err) {
+    console.error('OTP verification error:', err)
+    setOtpError('Network error. Please try again.')
+  } finally {
+    setLoading(false)
+  }
+}
 
   const handleBack = () => {
     setIsOtpMode(false)
     setOtp('')
+    setOtpError('')
+    setLoginData(null)
   }
 
-  const handleRedirect=()=>{
+ const handleResendOtp = async () => {
+  // Check for loginData instead of userInfo
+  if (!loginData) return;
+  
+  setLoading(true);
+  setOtpError('');
 
-    router.push('/dashboard')
+  try {
+    // Assuming you have a resend OTP endpoint
+    const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email: emailOrPhone,
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (response.ok && data.status) {
+      alert('OTP resent successfully!');
+      console.log('Resend otp', data);
+    } else {
+      setOtpError(data.message || 'Failed to resend OTP.');
+    }
+  } catch (err) {
+    console.error('Resend OTP error:', err);
+    setOtpError('Network error. Please try again.');
+  } finally {
+    setLoading(false);
   }
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
-      {/* Diagonal Top Section with Animation */}
-      <div className="absolute top-0 left-0 right-0 h-[450px] bg-gradient-to-r from-pink-600 to-yellow-600 bg-blue-600 low transform -skew-y-12 origin-top-left overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Wavy animation */}
-          <div className="absolute w-[200%] h-full animate-wave">
-            <svg 
-              viewBox="0 0 1200 120" 
-              preserveAspectRatio="none" 
-              className="absolute w-full h-full"
-            >
-              <path 
-                d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
-                opacity=".25" 
-                className="fill-current text-white/20"
-              ></path>
-              <path 
-                d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" 
-                opacity=".5" 
-                className="fill-current text-white/30"
-              ></path>
-              <path 
-                d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" 
-                className="fill-current text-white/40"
-              ></path>
-            </svg>
+};
+
+  const handleOtpChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6)
+    setOtp(value)
+    // Clear error when user starts typing
+    if (otpError) setOtpError('')
+  }
+
+  const handleEmailOrPhoneChange = (e) => {
+    setEmailOrPhone(e.target.value)
+    // Clear error when user starts typing
+    if (error) setError('')
+  }
+
+return (
+<div className="min-h-screen flex flex-col bg-white relative overflow-hidden">
+    {/* Video Background Layer */}
+    <div className="absolute inset-0 z-0">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-[60%] object-fill"
+      >
+        <source src="/videos/animation.mp4" type="video/mp4" />
+      </video>
+      
+      {/* Overlay to ensure text readability */}
+    </div>
+
+    {/* Navbar */}
+    <nav className="relative z-10 bg-transparent">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex-shrink-0">
+            <Link href="/" className="text-xl sm:text-2xl font-bold text-white drop-shadow-lg">
+              Card Security
+            </Link>
           </div>
-          
-     
         </div>
       </div>
+    </nav>
 
-      <div className="relative z-10 w-full max-w-md px-6 mt-16">
-        {/* Logo */}
-        <div className="text-center mb-8 bg-white shadow-2xl py-4 rounded-3xl">
-   
-          <h1 className="text-gray-800 text-3xl font-bold mt-4">Log in</h1>
-        
-
+    {/* Main Content */}
+    <div className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-6">
+      <div className="w-full max-w-sm sm:max-w-md">
         {/* Main Card */}
-        <div className=" rounded-xl text-black  p-8 transition-all duration-300 ease-in-out transform ">
+        <div className="rounded-xl text-black bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl p-6 sm:p-8 transition-all duration-300 ease-in-out transform">
           <form onSubmit={handleSignIn}>
             {!isOtpMode ? (
               // Login Form
               <>
-                <h2 className="text-2xl font-medium text-gray-900 mb-8">
+                <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 sm:mb-8">
                   Sign in to your account
                 </h2>
 
-                <div className="space-y-6">
+                {/* Error Message */}
+                {error && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+                    {error}
+                  </div>
+                )}
+
+                <div className="space-y-4 sm:space-y-6">
+                  {/* Country Code and Email/Phone Input - Single Line Layout */}
                   <div>
                     <label htmlFor="emailOrPhone" className="block text-sm font-medium text-gray-700 mb-2">
                       Email or Phone
                     </label>
-                    <input
-                      id="emailOrPhone"
-                      type="text"
-                      value={emailOrPhone}
-                      onChange={(e) => setEmailOrPhone(e.target.value)}
-                      className="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      placeholder="Enter your email or phone number"
-                      required
-                    />
+                    
+                    {/* Single line layout for all screen sizes */}
+                    <div className="flex">
+                      <select
+                        id="countryCode"
+                        name="countryCode"
+                        value={formData.countryCode}
+                        onChange={handleCountryCodeChange}
+                        disabled={loading}
+                        className="flex-shrink-0 w-16 sm:w-24 px-1 sm:px-2 py-3 border border-gray-300 border-r-0 rounded-l-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/90 disabled:bg-gray-100 text-xs sm:text-sm"
+                      >
+                        {countryCodes.map((country, index) => (
+                          <option key={index} value={country.code}>
+                            {country.flag} {country.code}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        id="emailOrPhone"
+                        type="text"
+                        value={emailOrPhone}
+                        onChange={handleEmailOrPhoneChange}
+                        disabled={loading}
+                        className="flex-1 min-w-0 px-3 py-3 border border-gray-300 rounded-r-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/90 disabled:bg-gray-100 text-sm sm:text-base"
+                        placeholder="Enter your email or phone number"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center">
@@ -104,6 +290,7 @@ export default function LoginPage() {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
+                      disabled={loading}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
@@ -113,14 +300,15 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02]"
+                    disabled={loading || !emailOrPhone.trim()}
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    Sign in
+                    {loading ? 'Sending OTP...' : 'Sign in'}
                   </button>
 
                   <div className="text-center">
                     <span className="text-sm text-gray-600">
-                      New to our App? {' '}
+                      New to our App?{' '}
                       <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                         Create account
                       </Link>
@@ -135,7 +323,8 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="flex items-center text-blue-600 hover:text-blue-500 text-sm font-medium"
+                    disabled={loading}
+                    className="flex items-center text-blue-600 hover:text-blue-500 text-sm font-medium disabled:text-gray-400"
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -144,14 +333,21 @@ export default function LoginPage() {
                   </button>
                 </div>
 
-                <h2 className="text-2xl font-medium text-gray-900 mb-2">
+                <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-2">
                   Enter verification code
                 </h2>
-                <p className="text-sm text-gray-600 mb-8">
-                  We sent a code to your register number 
+                <p className="text-sm text-gray-600 mb-6 sm:mb-8 break-words">
+                  We sent a code to {formData.countryCode} {emailOrPhone}
                 </p>
 
-                <div className="space-y-6">
+                {/* OTP Error Message */}
+                {otpError && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+                    {otpError}
+                  </div>
+                )}
+
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
                       Verification code
@@ -160,28 +356,31 @@ export default function LoginPage() {
                       id="otp"
                       type="text"
                       value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-center text-xl tracking-widest"
+                      onChange={handleOtpChange}
+                      disabled={loading}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl tracking-widest bg-white/90 disabled:bg-gray-100"
                       placeholder="000000"
                       maxLength="6"
                       required
                     />
                   </div>
 
-                  <button 
-                  onClick={handleRedirect}
+                  <button
                     type="submit"
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02]"
+                    disabled={loading || otp.length !== 6}
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    Verify
+                    {loading ? 'Verifying...' : 'Verify'}
                   </button>
 
                   <div className="text-center">
                     <button
                       type="button"
-                      className="text-sm text-blue-600 hover:text-blue-500 font-medium"
+                      onClick={handleResendOtp}
+                      disabled={loading}
+                      className="text-sm text-blue-600 hover:text-blue-500 font-medium disabled:text-gray-400"
                     >
-                      Resend code
+                      {loading ? 'Sending...' : 'Resend code'}
                     </button>
                   </div>
                 </div>
@@ -189,64 +388,26 @@ export default function LoginPage() {
             )}
           </form>
         </div>
-        </div>
+      </div>
+    </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+    {/* Footer */}
+    <footer className="relative z-10 bg-transparent py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center space-y-2 sm:space-y-3">
+          <div className="flex items-center justify-center space-x-4 text-sm text-white/90 drop-shadow-lg">
             <span>© Your Company</span>
             <span>•</span>
-            <a href="#" className="hover:text-gray-900 transition-colors">
+            <a href="#" className="hover:text-white transition-colors">
               Privacy & terms
             </a>
           </div>
-          
-          {!isOtpMode && (
-            <div className="mt-4 text-xs text-gray-500 max-w-sm mx-auto">
-              <p className="flex items-start">
-                <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-                If you use two-step authentication, keep your backup codes in a secure place. 
-                They can help you recover access to your account if you get locked out.
-              </p>
-            </div>
-          )}
+          <div className="text-xs sm:text-sm text-black drop-shadow-lg max-w-lg mx-auto px-4">
+            On a shared computer, make sure to sign out when you are done. This helps keep your account secure from other people using your device.
+          </div>
         </div>
       </div>
-
-      {/* Add the animation styles */}
-      <style jsx>{`
-        @keyframes wave {
-          0% {
-            transform: translateX(0) translateY(0);
-          }
-          50% {
-            transform: translateX(-25%) translateY(-10px);
-          }
-          100% {
-            transform: translateX(-50%) translateY(0);
-          }
-        }
-        
-        @keyframes pulse {
-          0% {
-            opacity: 0.8;
-            transform: scale(0.8);
-          }
-          100% {
-            opacity: 0.9;
-            transform: scale(1.2);
-          }
-        }
-        
-        .animate-wave {
-          animation: wave 60s ease-in-out infinite alternate;
-        }
-      `}</style>
-    </div>
-  )
+    </footer>
+  </div>
+)
 }
-
-
-
