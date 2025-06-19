@@ -34,7 +34,7 @@ const DiagonalHeroSection = () => {
               </h1>
               
               <p className="lg:text-[16px] text-black sm:text-lg md:text-xl lg:text-gray-900 leading-relaxed drop-shadow-md max-w-full sm:max-w-2xl lg:max-w-lg  lg:mx-0">
-            Join the millions of companies that use Card App to accept payments online and in person, embed financial services, power custom revenue models, and build a more profitable business.
+            Join the million of companies that use Card App to accept payments online and in person, embed financial services, power custom revenue models, and build a more profitable business.
               </p>
               
               <div className="flex flex-row  gap-4  lg:justify-start">
