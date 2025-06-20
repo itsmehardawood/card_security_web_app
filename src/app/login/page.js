@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [Success, setSuccess] = useState('')
   const [otpError, setOtpError] = useState('')
   const [loginData, setLoginData] = useState(null) // Store login response data
   const [formData, setFormData] = useState({
@@ -88,15 +89,24 @@ export default function LoginPage() {
     }
   }
 
-const handleOtpVerification = async () => {
+  const handleBack = () => {
+    setIsOtpMode(false)
+    setOtp('')
+    setOtpError('')
+    setLoginData(null)
+  }
+
+
+
+
+  const handleOtpVerification = async () => {
   setLoading(true)
   setOtpError('')
 
   try {
-    // Updated to send email and otp as keys
     const requestBody = {
-      email: emailOrPhone,  // Changed from login_input to email
-      otp: otp              // Keep otp as is
+      email: loginData.email,  // Get email from login API response
+      otp: otp
     }
 
     const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
@@ -129,7 +139,6 @@ const handleOtpVerification = async () => {
         storageMethod.setItem('userData', JSON.stringify(data.user))
       }
 
-      // Redirect to dashboard
       router.push('/dashboard')
     } else {
       setOtpError(data.message || 'Invalid OTP. Please try again.')
@@ -142,14 +151,7 @@ const handleOtpVerification = async () => {
   }
 }
 
-  const handleBack = () => {
-    setIsOtpMode(false)
-    setOtp('')
-    setOtpError('')
-    setLoginData(null)
-  }
-
- const handleResendOtp = async () => {
+const handleResendOtp = async () => {
   // Check for loginData instead of userInfo
   if (!loginData) return;
   
@@ -157,7 +159,6 @@ const handleOtpVerification = async () => {
   setOtpError('');
 
   try {
-    // Assuming you have a resend OTP endpoint
     const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
       method: 'POST',
       headers: {
@@ -165,14 +166,15 @@ const handleOtpVerification = async () => {
         'Accept': 'application/json',
       },
       body: JSON.stringify({
-        email: emailOrPhone,
+        country_code: formData.countryCode,  // Use the actual country code from form
+        email: loginData.email,  // Get email from login API response
       }),
     });
 
     const data = await response.json();
     
     if (response.ok && data.status) {
-      alert('OTP resent successfully!');
+      setSuccess('OTP resent successfully!')
       console.log('Resend otp', data);
     } else {
       setOtpError(data.message || 'Failed to resend OTP.');
@@ -184,6 +186,8 @@ const handleOtpVerification = async () => {
     setLoading(false);
   }
 };
+
+
 
   const handleOtpChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6)
@@ -218,10 +222,13 @@ return (
     {/* Navbar */}
     <nav className="relative z-10 bg-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-25">
           <div className="flex-shrink-0">
-            <Link href="/" className="text-xl sm:text-2xl font-bold text-white drop-shadow-lg">
-              Card Security
+            <Link href="/" className="text-xl sm:text-2xl my-2 font-bold text-white drop-shadow-lg">
+               <video autoPlay loop muted playsInline width="70">
+      <source src="/videos/cardnest.webm" type="video/webm" />
+      Your browser does not support the video tag.
+    </video> 
             </Link>
           </div>
         </div>
@@ -346,6 +353,14 @@ return (
                     {otpError}
                   </div>
                 )}
+
+                   {/* success Message  */}
+
+                   {Success && (
+                    <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md text-sm">
+                      {Success}
+                    </div>
+                  )}
 
                 <div className="space-y-4 sm:space-y-6">
                   <div>

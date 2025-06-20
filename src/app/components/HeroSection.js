@@ -5,15 +5,15 @@ import React from 'react';
 
 const DiagonalHeroSection = () => {
   return (
-    <div className="relative  bg-white w-full overflow-hidden">
+    <div className="relative  bg-white w-full min-h-screen  overflow-hidden">
       {/* Video Background Layer */}
-      <div className="absolute top-0 left-0 w-full h-[490px] md:h-[600px] xl:h-[610px] lg:h-[600px] z-0 overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-[420px] md:h-[600px] xl:h-[] lg:h-[600px] z-0 overflow-hidden">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-fill"
         >
           <source src="/videos/animation.mp4" type="video/mp4" />
         </video>

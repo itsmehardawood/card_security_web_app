@@ -11,6 +11,7 @@ export default function SignUpPage() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [Success, setSuccess] = useState('')
   const [otpError, setOtpError] = useState('');
   const [userInfo, setUserInfo] = useState(null); // To store user info from signup response
   const [formData, setFormData] = useState({
@@ -43,124 +44,118 @@ export default function SignUpPage() {
     if (error) setError('');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    try {
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          country_code: formData.countryCode,
-          phone_no: formData.phone,
-        }),
-      });
+  try {
+    const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.fullName,
+        email: formData.email,
+        country_code: formData.countryCode,
+        phone_no: formData.phone,
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok && data.status) {
-        // Success - store user info and show OTP form
-        setUserInfo(data.user);
-        setShowOtpForm(true);
-        console.log('Signup successful:', data);
-      } else {
-        // Handle API errors
-        setError(data.message || 'Registration failed. Please try again.');
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
-      setError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoading(false);
+    if (response.ok && data.status) {
+      // Success - store user data from the nested user object
+      setUserInfo(data.user);
+      setShowOtpForm(true);
+      console.log('Signup successful:', data);
+    } else {
+      // Handle API errors
+      setError(data.message || 'Registration failed. Please try again.');
     }
-  };
+  } catch (err) {
+    console.error('Signup error:', err);
+    setError('Network error. Please check your connection and try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    if (!userInfo) {
-      setOtpError('User information not found. Please try signing up again.');
-      return;
+const handleOtpSubmit = async (e) => {
+  e.preventDefault();
+  if (!userInfo) {
+    setOtpError('User information not found. Please try signing up again.');
+    return;
+  }
+
+  setLoading(true);
+  setOtpError('');
+
+  try {
+    const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email: userInfo.email,  // Get email from signup API response
+        otp: otp,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.status) {
+      setSuccess('Account created successfully!')
+      router.push("/dashboard");
+    } else {
+      setOtpError(data.message || 'Invalid OTP. Please try again.');
     }
+  } catch (err) {
+    console.error('OTP verification error:', err);
+    setOtpError('Network error. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
-    setLoading(true);
-    setOtpError('');
+const handleResendOtp = async () => {
+  if (!userInfo) return;
+  
+  setLoading(true);
+  setOtpError('');
 
-    try {
-      // Assuming you have an OTP verification endpoint
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: userInfo.id,
-          email: userInfo.email,
-          otp: otp,
-        }),
-      });
+  try {
+    const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        country_code: userInfo.country_code,  // Get country code from user data
+        email: userInfo.email,  // Get email from user data
+      }),
+    });
 
-      const data = await response.json();
-
-      if (response.ok && data.status) {
-        // OTP verified successfully
-        alert('Account created successfully!');
-        router.push("/dashboard");
-      } else {
-        setOtpError(data.message || 'Invalid OTP. Please try again.');
-      }
-    } catch (err) {
-      console.error('OTP verification error:', err);
-      setOtpError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    if (!userInfo) return;
+    const data = await response.json();
     
-    setLoading(true);
-    setOtpError('');
-
-    try {
-      // Assuming you have a resend OTP endpoint
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          email: userInfo.email,
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok && data.status) {
-        alert('OTP resent successfully!');
-         console.log('Resend otp', data);
-      } else {
-        setOtpError(data.message || 'Failed to resend OTP.');
-      
-
-      }
-    } catch (err) {
-      console.error('Resend OTP error:', err);
-      setOtpError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
+    if (response.ok && data.status) {
+      alert('OTP resent successfully!');
+      console.log('Resend otp', data);
+    } else {
+      setOtpError(data.message || 'Failed to resend OTP.');
     }
-  };
-
+  } catch (err) {
+    console.error('Resend OTP error:', err);
+    setOtpError('Network error. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
   const handleOtpChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6);
     setOtp(value);
@@ -186,11 +181,14 @@ export default function SignUpPage() {
 
       {/* Navbar */}
       <nav className="relative z-20 bg-white/90 ">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4">
+          <div className="flex justify-between items-center h-25">
             <div className="flex items-center">
               <Link href="/" className="text-2xl pl-8 font-bold text-gray-900 hover:text-blue-600 transition-colors">
-                Card Security
+                  <video autoPlay loop muted playsInline width="70">
+      <source src="/videos/cardnest.webm" type="video/webm" />
+      Your browser does not support the video tag.
+    </video> 
               </Link>
             </div>
           </div>
@@ -241,6 +239,14 @@ export default function SignUpPage() {
                   {error && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
                       {error}
+                    </div>
+                  )}
+
+                  {/* success Message  */}
+
+                   {Success && (
+                    <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md text-sm">
+                      {Success}
                     </div>
                   )}
 
@@ -355,6 +361,12 @@ export default function SignUpPage() {
                   {otpError && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
                       {otpError}
+                    </div>
+                  )}
+
+                     {Success && (
+                    <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md text-sm">
+                      {Success}
                     </div>
                   )}
 
