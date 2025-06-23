@@ -662,7 +662,7 @@ export default function SignUpPage() {
       <footer className="fixed bottom-4 left-0 right-0 z-30">
         <div className="text-center">
           <p className="text-xs text-white/80 drop-shadow-lg">
-            © 2025 Card Security. All rights reserved.
+            © 2025 Card Nest. All rights reserved.
           </p>
         </div>
       </footer>

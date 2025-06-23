@@ -434,7 +434,7 @@ const LandingPage = () => {
                   </svg>
                 </div>
                 <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Card Security
+                  Card Nest
                 </div>
               </div>
               <p className="text-gray-300 max-w-md leading-relaxed">
