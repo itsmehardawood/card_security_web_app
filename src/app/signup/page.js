@@ -444,8 +444,8 @@ export default function SignUpPage() {
           </div>
 
           {/* Right Section: Forms */}
-          <div className="md:w-1/2 bg-white/95  text-black py-15 px-5 my-5 flex flex-col rounded-xl h-[500px] justify-center shadow-xl items-center">
-            <div className="w-full max-w-md">
+          <div className="md:w-1/2 bg-white/95  text-black py-15 px-5 my-5 flex flex-col rounded-xl h-[540px] justify-center shadow-xl items-center">
+            <div className="w-full max-w-md ">
               {!showOtpForm ? (
                 // Signup Form
                 <>
