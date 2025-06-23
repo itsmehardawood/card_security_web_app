@@ -253,6 +253,7 @@ export default function LoginPage() {
   const isClient = typeof window !== 'undefined'
 
   // Authentication helper functions
+  
   const getStoredAuth = useCallback(() => {
     if (!isClient) return { token: null, userData: null, isRemembered: false }
     
@@ -807,8 +808,8 @@ export default function LoginPage() {
       <footer className="relative z-10 bg-transparent py-4 sm:py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-2 sm:space-y-3">
-            <div className="flex items-center justify-center space-x-4 text-sm text-white/90 drop-shadow-lg">
-              <span>© Your Company</span>
+            <div className="flex items-center justify-center space-x-4 text-sm text-black/90 drop-shadow-lg">
+              <span>© Card Nest</span>
               <span>•</span>
               <a href="#" className="hover:text-white transition-colors">
                 Privacy & terms
