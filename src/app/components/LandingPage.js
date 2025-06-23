@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import DiagonalHeroSection from "./HeroSection";
 import Link from "next/link";
 import Image from "next/image";
-import SubscriptionCards from "./SubscriptionsCard";
 import ContactSection from "./ContactSection";
+import PricingSection from "./SubscriptionsCard";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -403,7 +403,7 @@ const LandingPage = () => {
       </section>
 
 <div id='pricing'>
-  <SubscriptionCards />
+  <PricingSection />
 
 </div>
 
