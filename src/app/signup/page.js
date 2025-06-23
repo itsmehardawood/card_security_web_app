@@ -398,9 +398,9 @@ export default function SignUpPage() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-20 bg-gray-50 ">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4">
-          <div className="flex justify-between items-center h-20">
+      <nav className="relative z-20 bg-white/95  ">
+        <div className="max-w-6xl mx-auto px-3 sm:px-5 lg:px-3">
+          <div className="flex justify-between items-center h-22">
             <div className="flex items-center">
               <Link href="/" className="text-2xl pl-8 font-bold text-gray-900 hover:text-blue-600 transition-colors">
                 <video autoPlay loop muted playsInline width="70">
