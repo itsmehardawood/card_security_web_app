@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 import DiagonalHeroSection from "./HeroSection";
 import Link from "next/link";
-import Image from "next/image";
 import ContactSection from "./ContactSection";
 import PricingSection from "./SubscriptionsCard";
 
@@ -40,31 +39,39 @@ const Navbar = () => {
             >
               Home
             </button>
-            <button
-              onClick={() => scrollToSection("features")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => scrollToSection("benefits")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
-            >
-              Benefits
-            </button>
-            <button
+
+              <button
               onClick={() => scrollToSection("about")}
               className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
             >
               About
             </button>
 
-             <button
+
+              <button
+              onClick={() => scrollToSection("benefits")}
+              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+            >
+              Benefits
+            </button>
+
+
+                <button
               onClick={() => scrollToSection("pricing")}
               className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
             >
               Pricing
             </button>
+            <button
+              onClick={() => scrollToSection("features")}
+              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+            >
+              Features
+            </button>
+          
+          
+
+         
 
             <button
               onClick={() => scrollToSection("contact")}
@@ -82,12 +89,12 @@ const Navbar = () => {
             >
               Sign In
             </Link>
-            <button
-              onClick={() => scrollToSection("benefits")}
+            <Link
+href= "/signup"
               className="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg"
             >
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button - Show on medium and small screens */}
@@ -213,15 +220,12 @@ const Navbar = () => {
 
                 {/* CTA Button */}
                 <div className="pt-2">
-                  <button
-                    onClick={() => {
-                      scrollToSection("benefits");
-                      setIsMenuOpen(false);
-                    }}
+                  <Link
+                    href="/signup"
                     className="bg-teal-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-teal-700 transition-all duration-200 w-full text-center shadow-lg"
                   >
                     Get Started
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -232,157 +236,105 @@ const Navbar = () => {
   );
 };
 
+import { Menu, X, ArrowRight, Check, Star, Users, Shield, Zap } from 'lucide-react';
+
 const LandingPage = () => {
+
+
+  const sectionsData = {
+    // modular: {
+    //   title: "Modular solutions",
+    //   heading: "A fully integrated suite of payments products",
+    //   description: "We bring together everything that is required to build websites and apps that accept payments and send payouts globally.",
+    //   media: ''
+    // },
+    payments: {
+      title: "Payments",
+      heading: "Accept and optimize payments, globally",
+      description: "Increase authorization rates, offer local payment methods to boost conversion, and reduce fraud using AI.",
+      seeAlso: "Tax for automating tax registration, collection, and filing Radar for AI-powered fraud protection Terminal for custom in-person payments",
+      media: null
+    },
+    billing: {
+      title: "Billing",
+      heading: "Capture recurring revenue",
+      description: "Manage flat rate, usage-based, and hybrid pricing models, minimize churn, and automate finance operations.",
+      seeAlso: "Invoicing for invoice creation, collection, and tracking Usage-based billing for metering, billing, and consumption insights Sigma for custom revenue reports—no SQL required",
+      media: null
+    },
+    connect: {
+      title: "Benefits",
+      heading: "Set up multiparty payments and payouts",
+      description: "Integrate payments into your platform or marketplace for end-to-end payments experiences.",
+      seeAlso: "Terminal for custom in-person payments Instant Payouts for fast payments to users Payment Elements for customizable UIs",
+      media: null
+    },
+    issuing: {
+      title: "Issuing",
+      heading: "Build a fintech offering with banking-as-a-service",
+      description: "Launch, manage, and scale a commercial card program without any setup fees.",
+      seeAlso: "Treasury for financial accounts Capital for offering fast, flexible financing Connect for powering platform payments",
+      media: null,
+      darkMode: true
+    }
+  };
+
+
+
+
+
+
+  // Component to render section content
+  const SectionContent = ({ data, isDark = false }) => {
+    return (
+      <div className={`flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-10 lg:py-10 px-4 sm:px-6`}>
+        <div className="w-full text-center lg:text-left space-y-6">
+          <h3 className={`${isDark ? 'text-blue-400' : 'text-blue-500'} font-bold text-lg`}>
+            {data.title}
+          </h3>
+          <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold ${
+            isDark ? 'text-white' : 'text-gray-900'
+          } leading-tight`}>
+            {data.heading}
+          </h2>
+          <p className={`text-base sm:text-lg ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+          } max-w-3xl`}>
+            {data.description}
+          </p>
+          {data.seeAlso && (
+            <div className="space-y-3">
+              <p className={`font-bold text-sm sm:text-base ${isDark ? 'text-white' : 'text-black'}`}>
+                See also
+              </p>
+              <p className={`${
+                isDark ? 'text-gray-400' : 'text-gray-700'
+              } text-sm sm:text-base max-w-3xl`}>
+                {data.seeAlso}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
       <Navbar />
 
-      {/* Hero Section with Animation Background */}
-      <div id="hero">
+      {/* Hero Section */}
+      <section id="hero">
         <DiagonalHeroSection />
-      </div>
+      </section>
 
-      {/* Payment section */}
-      <div className="flex flex-col lg:flex-row mt-10 max-w-6xl mx-auto justify-center py-8 lg:py-12 px-4 sm:px-6">
-        {/* left */}
-        <div className="mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pr-8">
-          <h3 className="text-blue-500 font-bold text-lg pl-2 pb-2">Modular solutions</h3>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-            A fully integrated suite of payments products
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-none lg:max-w-[90%]">
-            We bring together everything that is required to build websites and
-            apps that accept payments and send payouts globally.
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex justify-center items-center mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pl-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 max-w-none lg:max-w-[80%]">
-            Video or gif will be Added here
-          </h2>
-        </div>
-      </div>
-
-      {/* Accept payment section */}
-      <div className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-8 lg:py-12 px-4 sm:px-6">
-        {/* left */}
-        <div className="mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pr-8">
-                  <h3 className="text-blue-500 font-bold text-lg  pb-2">Payments</h3>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            Accept and optimize payments, globally
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-none lg:max-w-[85%]">
-            Increase authorization rates, offer local payment methods to boost
-            conversion, and reduce fraud using AI.
-          </p>
-          <p className="font-bold text-sm sm:text-md text-black">See also</p>
-          <p className="text-gray-700 text-sm sm:text-base max-w-none lg:max-w-[80%]">
-            Tax for automating tax registration, collection, and filing Radar
-            for AI-powered fraud protection Terminal for custom in-person
-            payments
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex justify-center items-center mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pl-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 max-w-none lg:max-w-[80%]">
-            Video or gif will be Added here
-          </h2>
-        </div>
-      </div>
-
-      {/* billing Section */}
-      <div className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-8 lg:py-12 px-4 sm:px-6">
-        {/* left */}
-        <div className="mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pr-8">
-                          <h3 className="text-blue-500 font-bold text-lg  pb-2">Billing</h3>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            Capture recurring revenue
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-none lg:max-w-[85%]">
-            Manage flat rate, usage-based, and hybrid pricing models, minimize
-            churn, and automate finance operations.
-          </p>
-          <p className="font-bold text-sm sm:text-md text-black">See also</p>
-          <p className="text-gray-700 text-sm sm:text-base max-w-none lg:max-w-[80%]">
-            Invoicing for invoice creation, collection, and tracking Usage-based
-            billing for metering, billing, and consumption insights Sigma for
-            custom revenue reports—no SQL required
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex justify-center items-center mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pl-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 max-w-none lg:max-w-[80%]">
-            Video or gif will be Added here
-          </h2>
-        </div>
-      </div>
-
-      {/* Connect section */}
-      <div id="benefits" className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-8 lg:py-12 px-4 sm:px-6">
-        {/* left */}
-        <div className="mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pr-8">
-                                  <h3 className="text-blue-500 font-bold text-lg  pb-2">Connect</h3>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            Set up multiparty payments and payouts
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-none lg:max-w-[85%]">
-            Integrate payments into your platform or marketplace for end-to-end
-            payments experiences.
-          </p>
-          <p className="font-bold text-sm sm:text-md text-black">See also</p>
-          <p className="text-gray-700 text-sm sm:text-base max-w-none lg:max-w-[80%]">
-            Terminal for custom in-person payments Instant Payouts for fast
-            payments to users Payment Elements for customizable UIs
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex justify-center items-center mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pl-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 max-w-none lg:max-w-[80%]">
-            Video or gif will be Added here
-          </h2>
-        </div>
-      </div>
-
-      {/* Issuing section */}
-      <div id="features" className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-8 lg:py-12 px-4 sm:px-6">
-        {/* left */}
-        <div className="mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pr-8">
-                                  <h3 className="text-blue-500 font-bold text-lg  pb-2">Issuing</h3>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            Build a fintech offering with banking-as-a-service
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-none lg:max-w-[85%]">
-            Launch, manage, and scale a commercial card program without any
-            setup fees.
-          </p>
-          <p className="font-bold text-sm sm:text-md text-black">See also</p>
-          <p className="text-gray-700 text-sm sm:text-base max-w-none lg:max-w-[80%]">
-            Treasury for financial accounts Capital for offering fast, flexible
-            financing Connect for powering platform payments
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex justify-center items-center mb-8 lg:mb-16 text-center lg:text-left space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:pl-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 max-w-none lg:max-w-[80%]">
-            Video or gif will be Added here
-          </h2>
-        </div>
-      </div>
-
-
-  
-
-
-      {/* About Us Section */}
-      <section id="about" className="py-10 px-6 bg-gray-50">
+        {/* About Us Section */}
+      <section id="about" className="py-10 mb-5 lg:py-10 px-6 bg-gray-100">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8 text-gray-900">About Us</h2>
-          <div className="max-w-3xl mx-auto">
-            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <p className="text-lg text-gray-600 leading-relaxed">
               We are passionate innovators dedicated to creating solutions that
               transform the way you work. Our team combines cutting-edge
               technology with deep industry expertise to deliver products that
@@ -397,42 +349,85 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-10 px-6 bg-white">
-        <ContactSection />
+       {/* Connect Section */}
+      <section id="benefits" className="bg-white">
+        <SectionContent data={sectionsData.connect} />
       </section>
 
-<div id='pricing'>
-  <PricingSection />
+         {/* Pricing Section */}
+      <section id="pricing">
+        <PricingSection />
+      </section>
 
-</div>
+      {/* Modular Solutions Section
+      <section className="py-10 lg:py-10 bg-white">
+        <div className="flex flex-col max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center lg:text-left space-y-6">
+            <h3 className="text-blue-500 font-bold text-lg">{sectionsData.modular.title}</h3>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
+              {sectionsData.modular.heading}
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-4xl">
+              {sectionsData.modular.description}
+            </p>
+          </div>
+        
+
+        </div>
+      
+       
+      </section> */}
+
+   
+      {/* Billing Section */}
+      <section className="bg-slate-950">
+        <SectionContent data={sectionsData.billing}  isDark={true} />
+      </section>
+
+         {/* Payments Section */}
+      <section id="features" className="bg-white">
+        <SectionContent data={sectionsData.payments} />
+      </section>
+
+
+     
+
+      {/* Issuing Section with Dark Background */}
+      <section className="bg-slate-950">
+        <SectionContent data={sectionsData.issuing} isDark={true} />
+      </section>
+
+   
+
+    
+
+      {/* Contact Section */}
+      <section id="contact" className="py-5 lg:py-5 px-6 bg-gray-50">
+        <ContactSection />
+      </section>
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white relative overflow-hidden">
         {/* Animated top border */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-60 animate-pulse"></div>
 
-        <div className="container mx-auto px-6 py-5">
+        <div className="container mx-auto px-6 py-12">
           {/* Main footer content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Brand section */}
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                </div>
+                {/* logo footer */}
+
+                   <div className="text-xl sm:text-2xl font-bold text-white">  
+ <video autoPlay loop muted playsInline width="50">
+      <source src="/videos/cardnest.webm" type="video/webm" />
+      Your browser does not support the video tag.
+    </video>            </div>
+
+
+
+
                 <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Card Nest
                 </div>
@@ -484,10 +479,10 @@ const LandingPage = () => {
               </h3>
               <ul className="space-y-3">
                 {[
-                  { name: "Home", href: "/" },
-                  { name: "Login", href: "/login" },
-                  { name: "Sign Up", href: "/signup" },
-                  { name: "Payments", href: "/payments" },
+                  { name: "Home", href: "#hero" },
+                  { name: "Features", href: "#features" },
+                  { name: "Benefits", href: "#benefits" },
+                  { name: "Pricing", href: "#pricing" },
                 ].map((link) => (
                   <li key={link.name}>
                     <a
@@ -513,7 +508,7 @@ const LandingPage = () => {
               <ul className="space-y-3">
                 {[
                   { name: "Help Center", href: "#" },
-                  { name: "Contact Us", href: "#" },
+                  { name: "Contact Us", href: "#contact" },
                   { name: "Security Guide", href: "#" },
                   { name: "FAQ", href: "#" },
                 ].map((link) => (
@@ -537,8 +532,7 @@ const LandingPage = () => {
           <div className="border-t border-gray-700/50 pt-8">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
               <div className="text-gray-400 text-sm">
-                © 2025 Card Security. All rights reserved. Built with security
-                in mind.
+                © 2025 CardNest. All rights reserved. Built with security in mind.
               </div>
 
               <div className="flex flex-wrap justify-center lg:justify-end space-x-6 text-sm">
@@ -562,41 +556,15 @@ const LandingPage = () => {
             {/* Security badges */}
             <div className="flex justify-center items-center space-x-6 mt-6 pt-6 border-t border-gray-700/30">
               <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <svg
-                  className="w-4 h-4 text-green-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>SSL Secured</span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <svg
-                  className="w-4 h-4 text-blue-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Shield className="w-4 h-4 text-blue-500" />
                 <span>Privacy Protected</span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <svg
-                  className="w-4 h-4 text-purple-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <Zap className="w-4 h-4 text-purple-500" />
                 <span>24/7 Monitoring</span>
               </div>
             </div>

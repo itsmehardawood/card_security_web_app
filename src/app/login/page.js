@@ -247,136 +247,39 @@ export default function LoginPage() {
     { code: '+967', country: 'Yemen', name: 'Yemen', flag: '🇾🇪' },
     { code: '+260', country: 'Zambia', name: 'Zambia', flag: '🇿🇲' },
     { code: '+263', country: 'Zimbabwe', name: 'Zimbabwe', flag: '🇿🇼' }
-  ]
+  ];
 
   // Check if we're on the client side
   const isClient = typeof window !== 'undefined'
 
-  // Authentication helper functions
+
+
+ 
+// Updated country selector handler
+const handleCountryCodeChange = (e) => {
+  const selectedValue = e.target.value;
+  const selectedCountryObj = countryCodes.find(country => 
+    `${country.code}-${country.name}` === selectedValue
+  );
   
-  const getStoredAuth = useCallback(() => {
-    if (!isClient) return { token: null, userData: null, isRemembered: false }
-    
-    try {
-      // Check localStorage first (remember me), then sessionStorage
-      const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-      const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData')
-      const rememberLogin = localStorage.getItem('rememberLogin') === 'true'
-      
-      return {
-        token,
-        userData: userData ? JSON.parse(userData) : null,
-        isRemembered: rememberLogin && !!localStorage.getItem('authToken')
-      }
-    } catch (error) {
-      console.error('Error reading stored auth:', error)
-      return { token: null, userData: null, isRemembered: false }
-    }
-  }, [isClient])
-
-  const clearStoredAuth = useCallback(() => {
-    if (!isClient) return
-    
-    try {
-      localStorage.removeItem('authToken')
-      localStorage.removeItem('userData')
-      localStorage.removeItem('rememberLogin')
-      localStorage.removeItem('savedEmail')
-      localStorage.removeItem('savedCountryCode')
-      sessionStorage.removeItem('authToken')
-      sessionStorage.removeItem('userData')
-    } catch (error) {
-      console.error('Error clearing stored auth:', error)
-    }
-  }, [isClient])
-
-  const setStoredAuth = useCallback((token, userData, shouldRemember) => {
-    if (!isClient) return
-    
-    try {
-      // Clear any existing auth data first
-      clearStoredAuth()
-      
-      // Choose storage method based on remember me preference
-      const storageMethod = shouldRemember ? localStorage : sessionStorage
-      
-      // Store auth token if provided
-      if (token) {
-        storageMethod.setItem('authToken', token)
-      }
-      
-      // Store user data if provided
-      if (userData) {
-        storageMethod.setItem('userData', JSON.stringify(userData))
-      }
-
-      // Store remember preference in localStorage for future reference
-      if (shouldRemember) {
-        localStorage.setItem('rememberLogin', 'true')
-      }
-    } catch (error) {
-      console.error('Error storing auth:', error)
-    }
-  }, [isClient, clearStoredAuth])
-
-  // Check for existing authentication on component mount
-  useEffect(() => {
-    // Only run on client side
-    if (!isClient) return
-    
-    const storedAuth = getStoredAuth()
-    
-    if (storedAuth.token && storedAuth.userData) {
-      console.log('User already logged in, redirecting...')
-      router.push('/dashboard')
-    } else if (storedAuth.isRemembered) {
-      // If user was remembered but auth is missing, clear everything
-      clearStoredAuth()
-    }
-  }, [router, isClient, getStoredAuth, clearStoredAuth])
-
-  // Load saved credentials if remember me was previously enabled
-  useEffect(() => {
-    // Only run on client side
-    if (!isClient) return
-    
-    const storedAuth = getStoredAuth()
-    if (storedAuth.isRemembered) {
-      setRememberMe(true)
-      
-      // Restore the last used email/phone and country code
-      try {
-        const savedEmail = localStorage.getItem('savedEmail')
-        const savedCountryCode = localStorage.getItem('savedCountryCode')
-        
-        if (savedEmail) {
-          setEmailOrPhone(savedEmail)
-        }
-        if (savedCountryCode) {
-          setFormData(prev => ({ ...prev, countryCode: savedCountryCode }))
-        }
-      } catch (error) {
-        console.error('Error loading saved credentials:', error)
-      }
-    }
-  }, [isClient, getStoredAuth])
-
-  const handleCountryCodeChange = (e) => {
-    const newCountryCode = e.target.value
-    setFormData({
-      ...formData,
-      countryCode: newCountryCode
-    })
-    
-    // Save country code if remember me is checked
-    if (rememberMe && isClient) {
-      try {
-        localStorage.setItem('savedCountryCode', newCountryCode)
-      } catch (error) {
-        console.error('Error saving country code:', error)
-      }
-    }
+  if (selectedCountryObj) {
+    setFormData(prev => ({
+      ...prev,
+      countryCode: selectedCountryObj.code,
+      selectedCountry: selectedCountryObj.name
+    }));
   }
+  // Clear error when user changes selection
+  if (error) setError('');
+};
+
+// Get selected country info for display
+const getSelectedCountryInfo = () => {
+  const selected = countryCodes.find(country => 
+    country.code === formData.countryCode && country.name === formData.selectedCountry
+  );
+  return selected || countryCodes.find(country => country.name === 'United States');
+};
 
   const handleEmailOrPhoneChange = (e) => {
     const newValue = e.target.value
@@ -395,36 +298,7 @@ export default function LoginPage() {
     }
   }
 
-  const handleRememberMeChange = (e) => {
-    const isChecked = e.target.checked
-    setRememberMe(isChecked)
-    
-    if (!isClient) return
-    
-    if (isChecked) {
-      // Save current values when remember me is enabled
-      try {
-        if (emailOrPhone.trim()) {
-          localStorage.setItem('savedEmail', emailOrPhone)
-        }
-        if (formData.countryCode) {
-          localStorage.setItem('savedCountryCode', formData.countryCode)
-        }
-        localStorage.setItem('rememberLogin', 'true')
-      } catch (error) {
-        console.error('Error saving login details:', error)
-      }
-    } else {
-      // Clear saved values when remember me is disabled
-      try {
-        localStorage.removeItem('savedEmail')
-        localStorage.removeItem('savedCountryCode')
-        localStorage.removeItem('rememberLogin')
-      } catch (error) {
-        console.error('Error clearing saved details:', error)
-      }
-    }
-  }
+  
 
   const handleSignIn = async (e) => {
     e.preventDefault()
@@ -442,7 +316,7 @@ export default function LoginPage() {
 
         console.log('Sending request body:', JSON.stringify(requestBody, null, 2))
 
-        const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/login', {
+        const response = await fetch('https://cardsecuritysystem-hyhrn.ondigitalocean.app/api/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -651,21 +525,24 @@ export default function LoginPage() {
                       <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700 mb-2">
                         Select your country
                       </label>
-                      <select
-                        id="countryCode"
-                        name="countryCode"
-                        value={formData.countryCode}
-                        onChange={handleCountryCodeChange}
-                        disabled={loading}
-                        className="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/90 disabled:bg-gray-100 text-sm sm:text-base"
-                      >
-                        <option value="">Select your country</option>
-                        {countryCodes.map((country, index) => (
-                          <option key={index} value={country.code}>
-                            {country.flag} {country.name} ({country.code})
-                          </option>
-                        ))}
-                      </select>
+               
+                    <select
+  id="countryCode"
+  name="countryCode"
+  value={`${formData.countryCode}-${formData.selectedCountry}`}
+  onChange={handleCountryCodeChange}
+  disabled={loading}
+  className="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/90 disabled:bg-gray-100 text-sm sm:text-base"
+>
+  <option value="">Select your country</option>
+  {countryCodes.map((country, index) => (
+    <option key={index} value={`${country.code}-${country.name}`}>
+      {country.flag} {country.name} ({country.code})
+    </option>
+  ))}
+                    </select>
+
+
                     </div>
 
                     {/* Email/Phone Input */}
@@ -674,9 +551,10 @@ export default function LoginPage() {
                         Email or Phone
                       </label>
                       <div className="flex">
-                        <div className="flex-shrink-0 flex items-center px-3 py-3 border border-gray-300 border-r-0 rounded-l-md shadow-sm bg-gray-50 text-sm text-gray-600">
-                          {formData.countryCode || '+1'}
-                        </div>
+                       <div className="flex-shrink-0 flex items-center px-3 py-3 border border-gray-300 border-r-0 rounded-l-md shadow-sm bg-gray-50 text-sm text-gray-600">
+  {getSelectedCountryInfo().flag} {formData.countryCode || '+1'}
+</div>
+
                         <input
                           id="emailOrPhone"
                           type="text"
@@ -690,19 +568,7 @@ export default function LoginPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={handleRememberMeChange}
-                        disabled={loading}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                        Remember me on this device
-                      </label>
-                    </div>
+             
 
                     <button
                       type="submit"
@@ -742,9 +608,9 @@ export default function LoginPage() {
                   <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-2">
                     Enter verification code
                   </h2>
-                  <p className="text-sm text-gray-600 mb-6 sm:mb-8 break-words">
-                    We sent a code to {formData.countryCode} {emailOrPhone}
-                  </p>
+              <p className="text-sm text-gray-600 mb-6 sm:mb-8 break-words">
+  We sent a code to {getSelectedCountryInfo().flag} {formData.countryCode} {emailOrPhone}
+</p>
 
                   {/* OTP Error Message */}
                   {otpError && (
@@ -809,15 +675,13 @@ export default function LoginPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-2 sm:space-y-3">
             <div className="flex items-center justify-center space-x-4 text-sm text-black/90 drop-shadow-lg">
-              <span>© Card Nest</span>
+              <span>© CardNest</span>
               <span>•</span>
               <a href="#" className="hover:text-white transition-colors">
                 Privacy & terms
               </a>
             </div>
-            <div className="text-xs sm:text-sm text-black drop-shadow-lg max-w-lg mx-auto px-4">
-              On a shared computer, make sure to sign out when you are done. This helps keep your account secure from other people using your device.
-            </div>
+       
           </div>
         </div>
       </footer>

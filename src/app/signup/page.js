@@ -19,6 +19,7 @@ export default function SignUpPage() {
     email: '',
     phone: '',
     countryCode: '+1', 
+    selectedCountry: 'United States' // Add this to track the selected country name
   });
 
   // Comprehensive list of countries with codes, names, and flags
@@ -261,6 +262,32 @@ export default function SignUpPage() {
     if (error) setError('');
   };
 
+  // Updated country selector handler
+  const handleCountryChange = (e) => {
+    const selectedValue = e.target.value;
+    const selectedCountryObj = countryCodes.find(country => 
+      `${country.code}-${country.name}` === selectedValue
+    );
+    
+    if (selectedCountryObj) {
+      setFormData(prev => ({
+        ...prev,
+        countryCode: selectedCountryObj.code,
+        selectedCountry: selectedCountryObj.name
+      }));
+    }
+    // Clear error when user changes selection
+    if (error) setError('');
+  };
+
+  // Get selected country info for display
+  const getSelectedCountryInfo = () => {
+    const selected = countryCodes.find(country => 
+      country.code === formData.countryCode && country.name === formData.selectedCountry
+    );
+    return selected || countryCodes.find(country => country.name === 'United States');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -382,7 +409,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 transform relative overflow-hidden">
+    <div className="min-h-screen bg-white transform relative overflow-hidden">
       {/* Video Background */}
       <div className="fixed bottom-0 left-0 w-full h-[350px] z-0">
         <video
@@ -398,7 +425,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-20 bg-white/95  ">
+      <nav className="relative z-20 bg-white  ">
         <div className="max-w-6xl mx-auto px-3 sm:px-5 lg:px-3">
           <div className="flex justify-between items-center h-22">
             <div className="flex items-center">
@@ -514,14 +541,14 @@ export default function SignUpPage() {
                       <select
                         id="countryCode"
                         name="countryCode"
-                        value={formData.countryCode}
-                        onChange={handleInputChange}
+                        value={`${formData.countryCode}-${formData.selectedCountry}`}
+                        onChange={handleCountryChange}
                         disabled={loading}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
                       >
                         <option value="">Select your country</option>
                         {countryCodes.map((country, index) => (
-                          <option key={index} value={country.code}>
+                          <option key={index} value={`${country.code}-${country.name}`}>
                             {country.flag} {country.name} ({country.code})
                           </option>
                         ))}
@@ -535,7 +562,7 @@ export default function SignUpPage() {
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
                         <div className="flex-shrink-0 flex items-center px-3 py-2 border border-gray-300 border-r-0 rounded-l-md shadow-sm bg-gray-50 text-sm text-gray-600">
-                          {formData.countryCode || '+1'}
+                          {getSelectedCountryInfo().flag} {formData.countryCode || '+1'}
                         </div>
                         <input
                           type="tel"
@@ -582,7 +609,7 @@ export default function SignUpPage() {
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify your phone</h2>
                     <p className="text-sm text-gray-600">
-                      We have sent a 6-digit code to {formData.countryCode} {formData.phone}
+                      We have sent a 6-digit code to {getSelectedCountryInfo().flag} {formData.countryCode} {formData.phone}
                     </p>
                   </div>
 
@@ -662,7 +689,7 @@ export default function SignUpPage() {
       <footer className="fixed bottom-4 left-0 right-0 z-30">
         <div className="text-center">
           <p className="text-xs text-white/80 drop-shadow-lg">
-            © 2025 Card Nest. All rights reserved.
+            © 2025 CardNest. All rights reserved.
           </p>
         </div>
       </footer>

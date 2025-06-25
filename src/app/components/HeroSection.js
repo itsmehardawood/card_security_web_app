@@ -5,9 +5,9 @@ import React from 'react';
 
 const DiagonalHeroSection = () => {
   return (
-    <div className="relative  bg-white w-full min-h-screen  overflow-hidden">
+    <div className="relative  bg-white w-full  overflow-hidden">
       {/* Video Background Layer */}
-      <div className="absolute top-0 left-0 w-full h-[420px] md:h-[600px] xl:h-[] lg:h-[600px] z-0 overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-[480px] md:h-[600px] xl:h-[600px] lg:h-[600px] z-0 overflow-hidden">
         <video
           autoPlay
           loop
@@ -23,7 +23,7 @@ const DiagonalHeroSection = () => {
       </div>
 
       {/* Content Container - Now properly centered */}
-      <div className="relative z-10 min-h-screen flex pt-44 lg:pt-20 xl:pt-20 md:pt-20 justify-center">
+      <div className="relative z-10 min-h-screen flex pt-44 lg:pt-20 xl:pt-20 md:pt-20 items-center lg:items-start xl:items-center md:items-center justify-center">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             
@@ -80,3 +80,4 @@ const DiagonalHeroSection = () => {
 };
 
 export default DiagonalHeroSection;
+

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react'
 
 
@@ -14,12 +15,10 @@ const ContactSection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition-all duration-200">
+          <Link href="/signup" className="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition-all duration-200">
             Start now
-          </button>
-          <button className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-medium hover:bg-gray-50 transition-all duration-200">
-            Contact sales
-          </button>
+          </Link>
+     
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
