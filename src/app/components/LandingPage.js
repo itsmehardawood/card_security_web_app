@@ -237,6 +237,7 @@ href= "/signup"
 };
 
 import { Menu, X, ArrowRight, Check, Star, Users, Shield, Zap } from 'lucide-react';
+import FAQs from "./FAQs";
 
 const LandingPage = () => {
 
@@ -380,9 +381,9 @@ const LandingPage = () => {
 
    
       {/* Billing Section */}
-      <section className="bg-slate-950">
+      {/* <section className="bg-slate-950">
         <SectionContent data={sectionsData.billing}  isDark={true} />
-      </section>
+      </section> */}
 
          {/* Payments Section */}
       <section id="features" className="bg-white">
@@ -405,6 +406,16 @@ const LandingPage = () => {
       <section id="contact" className="py-5 lg:py-5 px-6 bg-gray-50">
         <ContactSection />
       </section>
+
+         <section> 
+         <FAQs/>
+         
+         </section>
+
+
+
+
+
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white relative overflow-hidden">

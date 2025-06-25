@@ -152,7 +152,7 @@ const plans = [
                 ))}
               </ul>
               
-              <Link href="/payments" className={`w-full ${plan.buttonColor} text-white block text-center py-2.5 px-4 rounded-full text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5`}>
+              <Link href="/login" className={`w-full ${plan.buttonColor} text-white block text-center py-2.5 px-4 rounded-full text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5`}>
                 {plan.name === 'CUSTOM' ? 'CONTACT SALES →' : 'SUBSCRIBE NOW →'}
               </Link>
             </div>

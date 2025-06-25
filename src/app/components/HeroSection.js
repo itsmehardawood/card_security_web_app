@@ -38,7 +38,7 @@ const DiagonalHeroSection = () => {
               </p>
               
               <div className="flex flex-row  gap-4  lg:justify-start">
-                <Link href="/payments" className=" lg:block md:block group relative px-6 sm:px-8 py-1 flex items-center bg-slate-900 text-white font-semibold rounded-full hover:bg-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-sm sm:text-base">
+                <Link href="/login" className=" lg:block md:block group relative px-6 sm:px-8 py-1 flex items-center bg-slate-900 text-white font-semibold rounded-full hover:bg-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-sm sm:text-base">
                   <span className="relative z-10">Start now  {" >"}</span>
                 </Link>
                 
