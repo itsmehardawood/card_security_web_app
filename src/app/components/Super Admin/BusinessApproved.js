@@ -11,6 +11,7 @@ const BusinessApprovalSection = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [notification, setNotification] = useState(null);
   const [activeTab, setActiveTab] = useState('pending');
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   // Fetch both pending and approved businesses on page load
   useEffect(() => {
@@ -65,6 +66,60 @@ const BusinessApprovalSection = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Enhanced download function with multiple fallback methods
+  const handleDownloadDocument = async (documentPath, fileName) => {
+    setDownloadLoading(true);
+    const fullUrl = `https://cardsecuritysystem-8xdez.ondigitalocean.app/storage/${documentPath}`;
+    
+    try {
+      // Method 1: Fetch and create blob (works for CORS-enabled servers)
+      const response = await fetch(fullUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName || documentPath.split('/').pop();
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        showNotification('Document downloaded successfully', 'success');
+      } else {
+        throw new Error('Failed to fetch document');
+      }
+    } catch (error) {
+      console.error('Download method 1 failed:', error);
+      
+      // Method 2: Direct link approach
+      try {
+        const link = document.createElement('a');
+        link.href = fullUrl;
+        link.download = fileName || documentPath.split('/').pop();
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showNotification('Opening document in new tab for download', 'success');
+      } catch (directError) {
+        console.error('Download method 2 failed:', directError);
+        
+        // Method 3: Window.open as last resort
+        window.open(fullUrl, '_blank');
+        showNotification('Document opened in new tab. Use browser\'s download option if needed.', 'success');
+      }
+    } finally {
+      setDownloadLoading(false);
+    }
   };
 
   const handleViewDocument = (business) => {
@@ -136,7 +191,7 @@ const BusinessApprovalSection = () => {
         },
         body: JSON.stringify({
           user_id: selectedBusiness.user.id,
-          status: 2 // 0 for reject
+          status: 2 // 2 for reject
         })
       });
 
@@ -149,7 +204,7 @@ const BusinessApprovalSection = () => {
         setBusinesses(prevBusinesses => 
           prevBusinesses.map(business => 
             business.id === businessId 
-              ? { ...business, user: { ...business.user, business_verified: 0 } }
+              ? { ...business, user: { ...business.user, business_verified: 2 } }
               : business
           )
         );
@@ -444,16 +499,23 @@ const BusinessApprovalSection = () => {
                           <Eye className="h-3 w-3 mr-1" />
                           View
                         </button>
-                        <a
-                          href={`https://cardsecuritysystem-8xdez.ondigitalocean.app/storage/${selectedBusiness.registration_document_path}`}
-                          download
-                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        <button
+                          onClick={() => handleDownloadDocument(
+                            selectedBusiness.registration_document_path,
+                            `${selectedBusiness.business_name}_registration_document.${selectedBusiness.registration_document_path.split('.').pop()}`
+                          )}
+                          disabled={downloadLoading}
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <svg className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
+                          {downloadLoading ? (
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700 mr-1"></div>
+                          ) : (
+                            <svg className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                          )}
                           Download
-                        </a>
+                        </button>
                       </div>
                     </div>
                     
@@ -501,8 +563,6 @@ const BusinessApprovalSection = () => {
                     Cancel
                   </button>
 
-
-
                   <button
                     onClick={() => handleReject(selectedBusiness.id)}
                     disabled={actionLoading}
@@ -515,8 +575,6 @@ const BusinessApprovalSection = () => {
                     )}
                     Reject
                   </button>
-
-
                   
                   <button
                     onClick={() => handleApprove(selectedBusiness.id)}

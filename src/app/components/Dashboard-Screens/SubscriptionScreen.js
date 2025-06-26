@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 function SubscriptionsScreen() {
+  const router = useRouter();
   const handleBrowsePlans = () => {
-    // Browse plans logic here
+    router.push("/plans")
     console.log('Browse plans clicked');
   };
 
@@ -28,7 +30,7 @@ function SubscriptionsScreen() {
             <h4 className="font-semibold mb-2">Standard Plan</h4>
             <p className="text-gray-600 text-sm mb-3">Perfect for small businesses</p>
             <div className="text-xl font-bold mb-3">$29/month</div>
-            <Link href="/payments" className="w-full block text-center px-3 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
+            <Link href="/plans" className="w-full block text-center px-3 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
              Go to payments
             </Link>
           </div>
@@ -36,15 +38,15 @@ function SubscriptionsScreen() {
             <h4 className="font-semibold mb-2">Premium Plan</h4>
             <p className="text-gray-600 text-sm mb-3">For growing businesses</p>
             <div className="text-xl font-bold mb-3">$79/month</div>
-            <button className="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+            <Link href="/plans" className="w-full block text-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
               Select Plan
-            </button>
+            </Link>
           </div>
           <div className="border rounded-lg p-4">
             <h4 className="font-semibold mb-2">Custom Plan</h4>
             <p className="text-gray-600 text-sm mb-3">For large organizations</p>
             <div className=" text-xl font-bold mb-3">Custom</div>
-            <Link href="/payments" className="w-full px-3 py-2 border block text-center border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
+            <Link href="/plans" className="w-full px-3 py-2 border block text-center border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
              Go to payments
             </Link>
           </div>

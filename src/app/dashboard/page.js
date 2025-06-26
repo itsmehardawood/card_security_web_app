@@ -30,6 +30,7 @@ function DashboardContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
   
   // Check if user came from OTP verification
   useEffect(() => {
@@ -39,6 +40,36 @@ function DashboardContent() {
     }
     setIsLoading(false);
   }, [searchParams]);
+
+  // Handle screen size changes and set initial sidebar state
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isLg = window.innerWidth >= 1024; // lg breakpoint is 1024px
+      setIsLargeScreen(isLg);
+      
+      // Set sidebar open by default on large screens, closed on smaller screens
+      setSidebarOpen(isLg);
+    };
+
+    // Check initial screen size
+    checkScreenSize();
+
+    // Add event listener for resize
+    window.addEventListener('resize', checkScreenSize);
+
+    // Cleanup event listener
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Auto-close sidebar when switching tabs on small screens
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    
+    // Auto-close sidebar on small screens when a tab is selected
+    if (!isLargeScreen) {
+      setSidebarOpen(false);
+    }
+  };
 
   const [businessInfo, setBusinessInfo] = useState({
     business_name: '',
@@ -57,7 +88,7 @@ function DashboardContent() {
   });
   
   const [documents, setDocuments] = useState([]);
-  const [status, setStatus] = useState('incomplete'); // incomplete, pending, approved, active
+  const [status, setStatus] = useState(''); // incomplete, pending, approved, active
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // API Integration States
@@ -200,26 +231,35 @@ function DashboardContent() {
     }
   };
 
-  // API function to check business status
-  const checkBusinessStatus = async (submissionId) => {
-    try {
-      const response = await fetch(`https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile/status/${submissionId}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setStatus(result.data.status);
-        return result.data;
-      }
-    } catch (error) {
-      console.error('Failed to check business status:', error);
+// API function to check business status
+const checkBusinessStatus = async () => {
+  try {
+    const response = await fetch(`https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
-
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      // Check the business_verified field to determine status
+      const businessVerified = result.data?.user?.business_verified;
+      
+      let newStatus;
+      if (businessVerified === 0) {
+        newStatus = 'pending';
+      } else {
+        newStatus = 'approved'; // Apply else case as approved for now
+      }
+      
+      setStatus(newStatus);
+      return result.data;
+    }
+  } catch (error) {
+    console.error('Failed to check business status:', error);
+  }
+};
   // Check status on component mount if submission ID exists
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -236,7 +276,7 @@ function DashboardContent() {
         return (
           <HomeScreen
             status={status} 
-            setActiveTab={setActiveTab} 
+            setActiveTab={handleTabChange}
           />
         );
         
@@ -267,7 +307,7 @@ function DashboardContent() {
         return (
           <DocumentsScreen 
             documents={documents} 
-            setActiveTab={setActiveTab}
+            setActiveTab={handleTabChange}
             handleFileUpload={handleFileUpload}
           />
         );
@@ -294,8 +334,9 @@ function DashboardContent() {
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         status={status}
+        isLargeScreen={isLargeScreen}
       />
 
       {/* Main Content Area - Scrollable */}
@@ -304,9 +345,13 @@ function DashboardContent() {
         <header className="flex-shrink-0 bg-white shadow-sm border-b">
           <div className="px-6 py-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
-              </h2>
+              {/* Mobile menu button - only show on small screens */}
+              <div className="flex items-center space-x-4">
+          
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+                </h2>
+              </div>
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {businessInfo.account_holder_first_name ? businessInfo.account_holder_first_name.charAt(0).toUpperCase() : 'U'}
@@ -323,6 +368,14 @@ function DashboardContent() {
           </div>
         </div>
       </div>
+
+      {/* Overlay for mobile when sidebar is open */}
+      {sidebarOpen && !isLargeScreen && (
+        <div 
+          className="fixed inset-0 bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }
