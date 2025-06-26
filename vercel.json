@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/securityscan",
+      "destination": "https://card-detector-react-app.vercel.app/securityscan"
+    },
+    {
+      "source": "/securityscan/:match*",
+      "destination": "https://card-detector-react-app.vercel.app/securityscan/:match*"
+    }
+  ]
+}
