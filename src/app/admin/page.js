@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ContentManagement from '../components/ContentManagement';
 import Header from '../components/AdminHeader';
 import NavigationTabs from '../components/AdminNav';
+import BusinessApprovalSection from '../components/Super Admin/BusinessApproved';
 
 // Placeholder components for other sections
 const PayPerCallSection = () => (
@@ -203,40 +204,7 @@ const PricingSection = () => (
   </div>
 );
 
-const EnterpriseApprovalSection = () => (
-  <div className="bg-white rounded-lg shadow-sm border p-6 text-black">
-    <h2 className="text-xl font-semibold text-gray-800 mb-4">Enterprise Package Approval</h2>
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-yellow-50 p-4 rounded-lg">
-          <h3 className="font-medium text-yellow-800">Pending Requests</h3>
-          <p className="text-2xl font-bold text-yellow-600">3</p>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg">
-          <h3 className="font-medium text-green-800">Approved This Month</h3>
-          <p className="text-2xl font-bold text-green-600">12</p>
-        </div>
-      </div>
-      <div className="border rounded-lg p-4">
-        <h4 className="font-medium mb-2">Recent Requests</h4>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between items-center py-2 border-b">
-            <span>Tech Innovators Inc.</span>
-            <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Pending</span>
-          </div>
-          <div className="flex justify-between items-center py-2 border-b">
-            <span>Future Systems LLC</span>
-            <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Pending</span>
-          </div>
-        </div>
-      </div>
-      <p className="text-gray-600">
-        This section would show enterprise approval requests, allow you to review 
-        custom requirements, and approve or reject enterprise packages.
-      </p>
-    </div>
-  </div>
-);
+
 
 const UserActivitySection = () => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -354,7 +322,7 @@ const APIDocumentationSection = () => (
 
 // Main Dashboard Component
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('Content Management');
+  const [activeTab, setActiveTab] = useState('Enterprise Approval');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -377,18 +345,15 @@ const AdminDashboard = () => {
     }
 
     switch (activeTab) {
-      case 'Pay-Per-Call':
-        return <PayPerCallSection />;
-      case 'Pricing':
-        return <PricingSection />;
+  
       case 'Enterprise Approval':
-        return <EnterpriseApprovalSection />;
+        return <BusinessApprovalSection />;
       case 'User Activity':
-        return <UserActivitySection />;
+        // return <UserActivitySection />;
       case 'Content Management':
-        return <ContentManagement />;
+        // return <ContentManagement />;
       case 'API Documentation':
-        return <APIDocumentationSection />;
+        // return <APIDocumentationSection />;
       default:
         return (
           <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -407,65 +372,7 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="space-y-6">
           {/* Quick Stats Bar */}
-          {!isLoading && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white p-4 rounded-lg shadow-sm border">
-                <div className="flex items-center">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Users</p>
-                    <p className="text-2xl font-semibold text-gray-900">1,247</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm border">
-                <div className="flex items-center">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Revenue</p>
-                    <p className="text-2xl font-semibold text-gray-900">$45,231</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm border">
-                <div className="flex items-center">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">API Calls</p>
-                    <p className="text-2xl font-semibold text-gray-900">156K</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm border">
-                <div className="flex items-center">
-                  <div className="p-3 bg-orange-100 rounded-lg">
-                    <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Growth</p>
-                    <p className="text-2xl font-semibold text-gray-900">+23%</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+      
 
           {/* Main Content */}
           {renderTabContent()}
@@ -476,7 +383,7 @@ const AdminDashboard = () => {
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>© 2025 Super Admin Dashboard. All rights reserved.</span>
+            <span>© CardNest 2025 Super Admin Dashboard. All rights reserved.</span>
             <div className="flex items-center space-x-4">
               <span>Version 2.1.0</span>
               <span>•</span>

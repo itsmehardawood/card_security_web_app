@@ -298,6 +298,24 @@ const getSelectedCountryInfo = () => {
     }
   }
 
+
+const setStoredAuth = (token, user, remember) => {
+  if (isClient) {
+    try {
+      if (remember) {
+        // Store in localStorage for persistence
+        localStorage.setItem('authToken', token)
+        localStorage.setItem('userData', JSON.stringify(user))
+      } else {
+        // Store in sessionStorage for session only
+        sessionStorage.setItem('authToken', token)
+        sessionStorage.setItem('userData', JSON.stringify(user))
+      }
+    } catch (error) {
+      console.error('Error storing auth data:', error)
+    }
+  }
+}
   
 
   const handleSignIn = async (e) => {
@@ -316,7 +334,7 @@ const getSelectedCountryInfo = () => {
 
         console.log('Sending request body:', JSON.stringify(requestBody, null, 2))
 
-        const response = await fetch('https://cardsecuritysystem-hyhrn.ondigitalocean.app/api/login', {
+        const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -377,7 +395,7 @@ const getSelectedCountryInfo = () => {
     setSuccess('')
 
     try {
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
+      const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/reset-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -427,7 +445,7 @@ const getSelectedCountryInfo = () => {
         otp: otp
       }
 
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
+      const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

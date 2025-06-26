@@ -15,11 +15,10 @@ export default function SignUpPage() {
   const [otpError, setOtpError] = useState('');
   const [userInfo, setUserInfo] = useState(null); // To store user info from signup response
   const [formData, setFormData] = useState({
-    fullName: '',
     email: '',
     phone: '',
     countryCode: '+1', 
-    selectedCountry: 'United States' // Add this to track the selected country name
+    selectedCountry: 'United States' ,
   });
 
   // Comprehensive list of countries with codes, names, and flags
@@ -263,22 +262,23 @@ export default function SignUpPage() {
   };
 
   // Updated country selector handler
-  const handleCountryChange = (e) => {
-    const selectedValue = e.target.value;
-    const selectedCountryObj = countryCodes.find(country => 
-      `${country.code}-${country.name}` === selectedValue
-    );
-    
-    if (selectedCountryObj) {
-      setFormData(prev => ({
-        ...prev,
-        countryCode: selectedCountryObj.code,
-        selectedCountry: selectedCountryObj.name
-      }));
-    }
-    // Clear error when user changes selection
-    if (error) setError('');
-  };
+const handleCountryChange = (e) => {
+  const selectedValue = e.target.value;
+  const selectedCountryObj = countryCodes.find(country => 
+    `${country.code}-${country.name}` === selectedValue
+  );
+  
+  if (selectedCountryObj) {
+    setFormData(prev => ({
+      ...prev,
+      countryCode: selectedCountryObj.code,
+      selectedCountry: selectedCountryObj.name,
+      country_name: selectedCountryObj.name // Explicitly set country_name
+    }));
+  }
+  // Clear error when user changes selection
+  if (error) setError('');
+};
 
   // Get selected country info for display
   const getSelectedCountryInfo = () => {
@@ -288,44 +288,44 @@ export default function SignUpPage() {
     return selected || countryCodes.find(country => country.name === 'United States');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    try {
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          country_code: formData.countryCode,
-          phone_no: formData.phone,
-        }),
-      });
+  try {
+    const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        country_code: formData.countryCode,
+        phone_no: formData.phone,
+        country_name: formData.selectedCountry
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok && data.status) {
-        // Success - store user data from the nested user object
-        setUserInfo(data.user);
-        setShowOtpForm(true);
-        console.log('Signup successful:', data);
-      } else {
-        // Handle API errors
-        setError(data.message || 'Registration failed. Please try again.');
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
-      setError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoading(false);
+    if (response.ok && data.status) {
+      // Success - store user data from the nested user object
+      setUserInfo(data.user);
+      setShowOtpForm(true);
+      console.log('Signup successful:', data);
+    } else {
+      // Handle API errors
+      setError(data.message || 'Registration failed. Please try again.');
     }
-  };
+  } catch (err) {
+    console.error('Signup error:', err);
+    setError('Network error. Please check your connection and try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
@@ -338,7 +338,7 @@ export default function SignUpPage() {
     setOtpError('');
 
     try {
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/verify-otp', {
+      const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -373,7 +373,7 @@ export default function SignUpPage() {
     setOtpError('');
 
     try {
-      const response = await fetch('https://cardsecuritysystem-ufuq7.ondigitalocean.app/api/reset-otp', {
+      const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/reset-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -496,7 +496,7 @@ export default function SignUpPage() {
 
                   <form onSubmit={handleSubmit} className="space-y-5">
                     {/* Full Name Input */}
-                    <div>
+                    {/* <div>
                       <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
                         Full name
                       </label>
@@ -512,7 +512,7 @@ export default function SignUpPage() {
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
                         placeholder="Enter your full name"
                       />
-                    </div>
+                    </div> */}
 
                     {/* Email Input */}
                     <div>
@@ -581,7 +581,7 @@ export default function SignUpPage() {
                     {/* Create Account Button */}
                     <button
                       type="submit"
-                      disabled={loading || !formData.fullName || !formData.email || !formData.phone || !formData.countryCode}
+                      disabled={loading || !formData.email || !formData.phone || !formData.countryCode}
                       className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium text-base transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
                       {loading ? 'Creating Account...' : 'Sign up'}

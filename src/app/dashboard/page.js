@@ -41,35 +41,28 @@ function DashboardContent() {
   }, [searchParams]);
 
   const [businessInfo, setBusinessInfo] = useState({
-    businessName: '',
-    ein: '',
-    businessAddress: {
-      street: '',
-      streetLine2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: 'United States'
-    },
-    sameAsIndividualAddress: false,
-    individualAddress: {
-      street: '',
-      streetLine2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: 'United States'
-    },
-    accountHolderFirstName: '',
-    accountHolderLastName: '',
-    businessPhone: '',
-    businessEmail: '',
-    businessDescription: ''
+    business_name: '',
+    business_registration_number: '',
+    street: '',
+    street_line2: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    country: 'Pakistan',
+    account_holder_first_name: '',
+    account_holder_last_name: '',
+    registration_document: null,
+    bank_info: '',
+    email: ''
   });
   
   const [documents, setDocuments] = useState([]);
   const [status, setStatus] = useState('incomplete'); // incomplete, pending, approved, active
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // API Integration States
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // Sidebar items for header title lookup
   const sidebarItems = [
@@ -82,25 +75,13 @@ function DashboardContent() {
     { id: 'developers', label: 'Developers', icon: '⚡' }
   ];
 
-  const handleInputChange = (e, section = null) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e) => {
+    const { name, value, type, files } = e.target;
     
-    if (name === 'sameAsIndividualAddress') {
+    if (type === 'file') {
       setBusinessInfo(prev => ({
         ...prev,
-        sameAsIndividualAddress: checked,
-        individualAddress: checked ? prev.businessAddress : prev.individualAddress
-      }));
-      return;
-    }
-
-    if (section) {
-      setBusinessInfo(prev => ({
-        ...prev,
-        [section]: {
-          ...prev[section],
-          [name]: value
-        }
+        [name]: files[0] || null
       }));
     } else {
       setBusinessInfo(prev => ({
@@ -119,40 +100,135 @@ function DashboardContent() {
     setDocuments(prev => prev.filter((_, i) => i !== index));
   };
 
+  // API INTEGRATION - Modified handleSubmit function
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
     
     // Validation
-    const requiredFields = ['businessName', 'ein', 'accountHolderFirstName', 'accountHolderLastName'];
+    const requiredFields = ['business_name', 'business_registration_number', 'account_holder_first_name', 'account_holder_last_name', 'street', 'city', 'state', 'country', 'email'];
     const missingFields = requiredFields.filter(field => !businessInfo[field]?.trim());
     
-    const requiredAddressFields = ['street', 'city', 'state', 'country'];
-    const missingAddressFields = requiredAddressFields.filter(field => !businessInfo.businessAddress[field]?.trim());
-    
-    if (missingFields.length > 0 || missingAddressFields.length > 0) {
-      alert('Please fill in all required fields');
+    if (missingFields.length > 0) {
+      setSubmitError('Please fill in all required fields');
       setIsSubmitting(false);
       return;
     }
 
-    if (documents.length === 0) {
-      alert('Please upload at least one business document');
+    if (!businessInfo.registration_document) {
+      setSubmitError('Please upload a business registration document');
       setIsSubmitting(false);
       return;
     }
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setStatus('pending');
-      setActiveTab('profile'); // Stay on profile to show pending status
+      // Prepare FormData for API submission
+      const formData = new FormData();
+      
+      // Add all business information fields individually
+      Object.keys(businessInfo).forEach(key => {
+        if (key === 'registration_document' && businessInfo[key]) {
+          formData.append('registration_document', businessInfo[key]);
+        } else if (key !== 'registration_document' && businessInfo[key]) {
+          formData.append(key, businessInfo[key]);
+        }
+      });
+      
+      // Make API call
+      const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile', {
+        method: 'POST',
+        body: formData,
+        // Don't set Content-Type header - let browser set it for FormData
+      });
+      
+      // Check if response is successful
+      if (response.ok) {
+        let result;
+        
+        try {
+          result = await response.json();
+        } catch (parseError) {
+          // If JSON parsing fails, treat as success if status is ok
+          result = { message: 'Business profile submitted successfully' };
+        }
+        
+        // Handle different success response formats
+        const isSuccess = result.success === true || 
+                         result.success === 'true' ||
+                         result.message?.includes('successfully') ||
+                         result.status === 'success' ||
+                         response.status === 200 || 
+                         response.status === 201;
+        
+        if (isSuccess) {
+          setStatus('pending');
+          setActiveTab('profile');
+          setSubmitSuccess(true);
+          
+          // Store submission ID for tracking
+          if (typeof window !== 'undefined') {
+            const submissionId = result.submissionId || result.id || result.data?.id || Date.now().toString();
+            localStorage.setItem('businessSubmissionId', submissionId);
+          }
+          
+          console.log('Submission successful:', result);
+        } else {
+          throw new Error(result.error || result.message || 'Submission failed');
+        }
+      } else {
+        // Handle HTTP error status codes
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.error || `HTTP error! status: ${response.status}`);
+      }
+      
     } catch (error) {
       console.error('Submission failed:', error);
-      alert('Submission failed. Please try again.');
+      
+      // Handle different types of errors
+      if (error.message.includes('400')) {
+        setSubmitError('Invalid data submitted. Please check your information.');
+      } else if (error.message.includes('500')) {
+        setSubmitError('Server error. Please try again later.');
+      } else if (error.message.includes('Failed to fetch')) {
+        setSubmitError('Network error. Please check your connection.');
+      } else {
+        setSubmitError(error.message || 'An unexpected error occurred. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // API function to check business status
+  const checkBusinessStatus = async (submissionId) => {
+    try {
+      const response = await fetch(`https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile/status/${submissionId}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setStatus(result.data.status);
+        return result.data;
+      }
+    } catch (error) {
+      console.error('Failed to check business status:', error);
+    }
+  };
+
+  // Check status on component mount if submission ID exists
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const submissionId = localStorage.getItem('businessSubmissionId');
+      if (submissionId) {
+        checkBusinessStatus(submissionId);
+      }
+    }
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -171,6 +247,8 @@ function DashboardContent() {
             documents={documents}
             status={status}
             isSubmitting={isSubmitting}
+            submitError={submitError}
+            submitSuccess={submitSuccess}
             handleInputChange={handleInputChange}
             handleFileUpload={handleFileUpload}
             removeDocument={removeDocument}
@@ -231,7 +309,7 @@ function DashboardContent() {
               </h2>
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                  {businessInfo.accountHolderFirstName ? businessInfo.accountHolderFirstName.charAt(0).toUpperCase() : 'U'}
+                  {businessInfo.account_holder_first_name ? businessInfo.account_holder_first_name.charAt(0).toUpperCase() : 'U'}
                 </div>
               </div>
             </div>
