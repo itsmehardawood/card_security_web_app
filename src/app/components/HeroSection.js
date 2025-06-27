@@ -5,7 +5,7 @@ import React from 'react';
 
 const DiagonalHeroSection = () => {
   return (
-    <div className="relative  bg-white w-full  overflow-hidden">
+    <div className="relative h-[710px] bg-white w-full  overflow-hidden">
       {/* Video Background Layer */}
       <div className="absolute top-0 left-0 w-full h-[480px] md:h-[600px] xl:h-[600px] lg:h-[600px] z-0 overflow-hidden">
         <video
@@ -23,13 +23,13 @@ const DiagonalHeroSection = () => {
       </div>
 
       {/* Content Container - Now properly centered */}
-      <div className="relative z-10 min-h-screen flex pt-44 lg:pt-20 xl:pt-20 md:pt-20 items-start lg:items-start xl:items-center md:items-center justify-center">
+      <div className="relative z-10  flex pt-35 pb-10 lg:pt-20 xl:pt-20 md:pt-20 items-start lg:items-start xl:items-start md:items-center justify-center">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             
             {/* Left Content Section */}
             <div className="space-y-4 md:text-left lg:text-left pt-0 lg:pt-20 md:pt-10">
-              <h1 className="text-[42px] text-gray-900 sm:text-6xl md:text-5xl lg:text-3xl xl:text-[50px] font-extrabold lg:text-gray-900 md:text-gray-900 drop-shadow-lg leading-tight max-w-full xl:max-w-[100%]">
+              <h1 className="text-[40px] text-gray-900 sm:text-6xl md:text-5xl lg:text-3xl xl:text-[50px] font-extrabold lg:text-gray-900 md:text-gray-900 drop-shadow-lg leading-tight max-w-full xl:max-w-[100%]">
             Online Credit & Debit Card Fraud Prevention Intelligence System Designed to Grow Your Revenue
               </h1>
               
@@ -58,14 +58,15 @@ const DiagonalHeroSection = () => {
                 />
                 
                 {/* Main hero image */}
-                <Image 
-                  src="/images/heroimg.png" 
-                  width={900} 
-                  height={800} 
-                  alt="hero img"
-                  className="relative z-10 w-full h-auto opacity-95 right-9 top-4 object-contain"
-                  priority
-                />
+               <video 
+  src="/videos/main_video.mp4" 
+  style={{ width: '170px', height: 'auto' }}
+  className="relative z-10 right-9 left-44 top-4 object-contain"
+  autoPlay
+  loop
+  muted
+  playsInline
+/>
               </div>
             </div>
           </div>

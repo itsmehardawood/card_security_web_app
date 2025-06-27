@@ -12,13 +12,13 @@ export const plans = [
     buttonColor: 'bg-purple-500 hover:bg-purple-600',
     features: [
       { text: 'Front-side card scan', included: true },
-      { text: 'Back-side scan', included: false },
+      { text: 'Back-side scan', included: true },
       { text: 'AI fraud detection', included: true },
       { text: 'CardNest protection', included: true },
       { text: 'ML data accuracy', included: true },
       { text: 'PCI/DSS security', included: true },
       { text: 'API integration', included: true },
-      { text: '24/7 fraud watch', included: false },
+      { text: '24/7 fraud watch', included: true },
       { text: '$0.50/extra scan', included: true }
     ]
   },
@@ -41,7 +41,7 @@ export const plans = [
       { text: 'ML data accuracy', included: true },
       { text: 'PCI/DSS security', included: true },
       { text: 'API integration', included: true },
-      { text: '24/7 fraud watch', included: false },
+      { text: '24/7 fraud watch', included: true },
       { text: '$0.50/extra scan', included: true }
     ]
   },

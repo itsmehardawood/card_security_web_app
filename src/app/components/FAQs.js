@@ -77,26 +77,39 @@ function FAQs() {
 ];
 
   return (
-    <section className="my-5 sm:my-5">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Everything you need to know about our pricing and plans
-        </p>
-      </div>
+<section className="my-5 sm:my-5 relative min-h-screen">
+  {/* Background video at bottom */}
+  <div className="absolute bottom-0 left-0 w-full h-[400px] lg:[500px] xl:h-auto z-0">
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      className="w-full h-full object-cover"
+    >
+      <source src="/videos/fliped_video.mp4" type="video/mp4" />
+    </video>
+  </div>
 
-      <div className="max-w-3xl mx-auto space-y-6">
-        {faqData.map((faq, index) => (
-          <FAQItem
-            key={index}
-            question={faq.question}
-            answer={faq.answer}
-          />
-        ))}
-      </div>
-    </section>
+  <div className="text-center pb-5 relative z-10">
+    <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+      Frequently Asked Questions
+    </h2>
+    <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+      Everything you need to know about our pricing and plans
+    </p>
+  </div>
+
+  <div className="max-w-3xl mx-auto space-y-6 mb-8 py-10 relative z-10">
+    {faqData.map((faq, index) => (
+      <FAQItem
+        key={index}
+        question={faq.question}
+        answer={faq.answer}
+      />
+    ))}
+  </div>
+</section>
   );
 }
 

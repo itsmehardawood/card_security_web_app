@@ -295,8 +295,8 @@ const LandingPage = () => {
       media: null
     },
  connect: {
-  title: "Benefits of CardNest",
-  heading: "Why Businesses Trust Us",
+  title: "Benefits of CardNest Why Businesses Trust Us",
+  heading: "",
   description: "",
   media: null,
   features: [
@@ -336,8 +336,6 @@ const LandingPage = () => {
 },
   features: {
   title: "Comprehensive Features of CardNest ",
-  heading: "Build a fintech offering with banking-as-a-service",
-  description: "Launch, manage, and scale a commercial card program without any setup fees.",
   media: null,
   darkMode: true,
   features: [
@@ -400,28 +398,38 @@ const LandingPage = () => {
 
   // Component to render section content
 const SectionContent = ({ data, isDark = false }) => {
-  const shouldDivideFeatures = data.features && data.features.length > 7;
-  const leftFeatures = shouldDivideFeatures ? data.features.slice(0, 6) : data.features;
-  const rightFeatures = shouldDivideFeatures ? data.features.slice(6, 12) : [];
+  const shouldDivideFeatures = data.features && data.features.length > 5;
+  const leftFeatures = shouldDivideFeatures ? data.features.slice(0, 5) : data.features;
+  const rightFeatures = shouldDivideFeatures ? data.features.slice(5, 10) : [];
 
   const FeatureItem = ({ feature, index }) => (
     <div key={index} className="flex items-start space-x-3">
-      <div className={`flex-shrink-0 w-5 h-5 rounded-full ${
-        isDark ? 'bg-green-500' : 'bg-green-600'
-      } flex items-center justify-center mt-1`}>
+      <div
+        className={`flex-shrink-0 w-5 h-5 rounded-full ${
+          isDark ? 'bg-green-500' : 'bg-green-600'
+        } flex items-center justify-center mt-1`}
+      >
         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          <path
+            fillRule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            clipRule="evenodd"
+          />
         </svg>
       </div>
       <div className="flex-1">
-        <h4 className={`font-bold text-base sm:text-lg ${
-          isDark ? 'text-white' : 'text-gray-900'
-        } mb-2`}>
+        <h4
+          className={`font-bold text-base sm:text-lg ${
+            isDark ? 'text-white' : 'text-gray-900'
+          } mb-2`}
+        >
           {feature.title}
         </h4>
-        <p className={`text-sm sm:text-base ${
-          isDark ? 'text-gray-300' : 'text-gray-600'
-        }`}>
+        <p
+          className={`text-sm sm:text-base ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+          }`}
+        >
           {feature.description}
         </p>
       </div>
@@ -430,43 +438,47 @@ const SectionContent = ({ data, isDark = false }) => {
 
   return (
     <div className={`w-full ${isDark ? 'bg-slate-900' : ''}`}>
-      <div className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-10 lg:py-10 px-4 sm:px-6">
+      <div className="flex flex-col max-w-6xl mx-auto justify-center py-10 px-4 sm:px-6">
         <div className="w-full text-center lg:text-left space-y-6">
-          <h3 className={`${isDark ? 'text-blue-400' : 'text-blue-500'} font-bold text-lg`}>
+          <h3
+            className={`${
+              isDark ? 'text-blue-400' : 'text-blue-500'
+            } font-bold text-3xl`}
+          >
             {data.title}
           </h3>
-          <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold ${
-            isDark ? 'text-white' : 'text-gray-900'
-          } leading-tight`}>
+          <h2
+            className={`text-2xl sm:text-3xl lg:text-4xl font-bold ${
+              isDark ? 'text-white' : 'text-gray-900'
+            } leading-tight`}
+          >
             {data.heading}
           </h2>
-          <p className={`text-base sm:text-lg ${
-            isDark ? 'text-gray-300' : 'text-gray-600'
-          } max-w-3xl`}>
+          <p
+            className={`text-base sm:text-lg ${
+              isDark ? 'text-gray-300' : 'text-gray-600'
+            } max-w-3xl mx-auto lg:mx-0`}
+          >
             {data.description}
           </p>
-          
-          {/* Features Section */}
+
+          {/* Features */}
           {data.features && (
             <div className="mt-8">
               {shouldDivideFeatures ? (
-                // Two column layout for more than 7 features
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Left column */}
                   <div className="space-y-4">
                     {leftFeatures.map((feature, index) => (
                       <FeatureItem key={index} feature={feature} index={index} />
                     ))}
                   </div>
-                  {/* Right column */}
                   <div className="space-y-4">
                     {rightFeatures.map((feature, index) => (
-                      <FeatureItem key={index + 6} feature={feature} index={index + 6} />
+                      <FeatureItem key={index + 5} feature={feature} index={index + 5} />
                     ))}
                   </div>
                 </div>
               ) : (
-                // Single column layout for 7 or fewer features
                 <div className="space-y-4">
                   {leftFeatures.map((feature, index) => (
                     <FeatureItem key={index} feature={feature} index={index} />
@@ -475,15 +487,21 @@ const SectionContent = ({ data, isDark = false }) => {
               )}
             </div>
           )}
-          
+
           {data.seeAlso && (
             <div className="space-y-3 mt-8">
-              <p className={`font-bold text-sm sm:text-base ${isDark ? 'text-white' : 'text-black'}`}>
+              <p
+                className={`font-bold text-sm sm:text-base ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}
+              >
                 See also
               </p>
-              <p className={`${
-                isDark ? 'text-gray-400' : 'text-gray-700'
-              } text-sm sm:text-base max-w-3xl`}>
+              <p
+                className={`${
+                  isDark ? 'text-gray-400' : 'text-gray-700'
+                } text-sm sm:text-base max-w-3xl`}
+              >
                 {data.seeAlso}
               </p>
             </div>
@@ -493,6 +511,7 @@ const SectionContent = ({ data, isDark = false }) => {
     </div>
   );
 };
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -505,24 +524,38 @@ const SectionContent = ({ data, isDark = false }) => {
       </section>
 
         {/* About Us Section */}
-      <section id="about" className="py-8 px-6  bg-gray-100 w-full">
-  <div className="container mx-auto text-center">
-    <h2 className="text-3xl font-bold mb-6 text-gray-900">About Us</h2>
-    <div className="max-w-6xl mx-auto space-y-4">
-      <p className="text-base text-gray-600 leading-relaxed">
-        <strong>CardNest</strong> is a cutting-edge financial technology company dedicated to transforming how businesses protect themselves and their customers from online card fraud. Founded on the principle that transaction security should be proactive, not reactive, CardNest leverages advanced artificial intelligence and machine learning to detect and prevent fraudulent card activity before it occurs—empowering businesses of all sizes to operate with confidence in a digital-first economy. As online commerce and digital payments continue to scale globally, so too does the threat of payment fraud. In response, CardNest has a robust, real-time fraud prevention technology designed to scan, detect, analyze, and prevent fraudulent activity before a transaction even begins—within milliseconds—without disrupting the customer experience.
-      </p>
-      
-      <p className="text-base text-gray-600 leading-relaxed">
-        At the core of our platform is the <strong>CardNest Card-At-Present (CAP) engine</strong>, a multi-layered security technology that uses deep learning behavioral modeling, pattern recognition, and anomaly detection to confirm cardholder legitimacy. Our Artificial Intelligence models continuously analyze thousands of data points, including card security features, transaction history, device fingerprinting, location consistency, behavioral biometrics, and more—enabling our system to flag suspicious transactions with unparalleled accuracy before payment checkout happens.
-      </p>
+    <section id="about" className="py-12 px-6 bg-gray-100 w-full">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-3xl md:text-4xl font-bold mb-10 text-gray-900 text-center">
+      About Us
+    </h2>
 
-      <p className="text-base text-gray-600 leading-relaxed">
-        CardNest security architecture is <strong>PCI/DSS compliant</strong>, ensuring that all processes meet the highest global standards for payment data protection. Importantly, CardNest does not store <strong>sensitive cardholder information.</strong> All analysis and validation are performed in real-time, minimizing risk and maximizing user privacy. Designed with developers and businesses in mind, CardNest offers a <strong>simple, API-based integration</strong> that seamlessly connects to any existing payment gateway, merchants systems, e-commerce platform, remittance businesses, or banking infrastructure. Whether you are a startup or an enterprise-scale institution, CardNest adapts to your needs—scaling protection as your transaction volume grows. Our technology is currently trusted by businesses across financial services, e-commerce, digital remittance, and SaaS industries. Organizations using CardNest have seen <strong>up to a 98% or more reduction in chargebacks</strong>, increased customer trust, and significant improvements in operational efficiency and revenue retention. At CardNest, we are not just building fraud detection software—we are redefining what it means to transact safely online. By staying ahead of emerging fraud tactics and continuously evolving our Artificial Intelligence capabilities, we help our clients maintain integrity, protect customer trust, and accelerate secure digital growth.
-      </p>
+    <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
+      {/* Left Text Section */}
+      <div className="w-full md:w-1/2 space-y-6 text-left">
+        <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+          <strong>CardNest</strong> is a cutting-edge financial technology company dedicated to transforming how businesses protect themselves and their customers from online card fraud. Founded on the principle that transaction security should be proactive, not reactive, CardNest leverages advanced artificial intelligence and machine learning to detect and prevent fraudulent card activity before it occurs—empowering businesses of all sizes to operate with confidence in a digital-first economy. As online commerce and digital payments continue to scale globally, so too does the threat of payment fraud. In response, CardNest has a robust, real-time fraud prevention technology designed to scan, detect, analyze, and prevent fraudulent activity before a transaction even begins—within milliseconds—without disrupting the customer experience.
+        </p>
+
+        <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+          At the core of our platform is the <strong>CardNest Card-At-Present (CAP) engine</strong>, a multi-layered security technology that uses deep learning behavioral modeling, pattern recognition, and anomaly detection to confirm cardholder legitimacy. Our Artificial Intelligence models continuously analyze thousands of data points, including card security features, transaction history, device fingerprinting, location consistency, behavioral biometrics, and more—enabling our system to flag suspicious transactions with unparalleled accuracy before payment checkout happens.
+        </p>
+
+        <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+          CardNest security architecture is <strong>PCI/DSS compliant</strong>, ensuring that all processes meet the highest global standards for payment data protection. Importantly, CardNest does not store <strong>sensitive cardholder information.</strong> All analysis and validation are performed in real-time, minimizing risk and maximizing user privacy. Designed with developers and businesses in mind, CardNest offers a <strong>simple, API-based integration</strong> that seamlessly connects to any existing payment gateway, merchant system, e-commerce platform, remittance business, or banking infrastructure. Whether you are a startup or an enterprise-scale institution, CardNest adapts to your needs—scaling protection as your transaction volume grows. Our technology is currently trusted by businesses across financial services, e-commerce, digital remittance, and SaaS industries. Organizations using CardNest have seen <strong>up to a 98% or more reduction in chargebacks</strong>, increased customer trust, and significant improvements in operational efficiency and revenue retention. At CardNest, we are not just building fraud detection software—we are redefining what it means to transact safely online. By staying ahead of emerging fraud tactics and continuously evolving our Artificial Intelligence capabilities, we help our clients maintain integrity, protect customer trust, and accelerate secure digital growth.
+        </p>
+      </div>
+
+      {/* Right Image/Video Section */}
+      <div className="w-full md:w-1/2 flex justify-center">
+        <div className="bg-white border text-black rounded-xl shadow-md p-4 w-full max-w-md">
+          IMG or Video
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
 
        {/* Connect Section */}
       <section id="benefits" className="bg-white">
@@ -584,7 +617,7 @@ const SectionContent = ({ data, isDark = false }) => {
 
 
 
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <div className="text-2xl font-bold text-white">
                   Card Nest
                 </div>
               </div>
@@ -663,9 +696,7 @@ const SectionContent = ({ data, isDark = false }) => {
               </h3>
               <ul className="space-y-3">
                 {[
-                  { name: "Help Center", href: "#" },
-                  { name: "Contact Us", href: "#contact" },
-                  { name: "Security Guide", href: "#" },
+              
                   { name: "FAQ", href: "#" },
                 ].map((link) => (
                   <li key={link.name}>
@@ -693,10 +724,8 @@ const SectionContent = ({ data, isDark = false }) => {
 
               <div className="flex flex-wrap justify-center lg:justify-end space-x-6 text-sm">
                 {[
-                  { name: "Privacy Policy", href: "#" },
-                  { name: "Terms of Service", href: "#" },
-                  { name: "Cookie Policy", href: "#" },
-                  { name: "Security", href: "#" },
+              
+            
                 ].map((link, index) => (
                   <a
                     key={index}

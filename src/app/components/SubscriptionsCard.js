@@ -9,7 +9,7 @@ const PricingSection = ({ isDark = false }) => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-4">
           <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-black'} mb-3`}>
-            CardNest Subscriptions Plans
+            Subscriptions Plans
           </h2>
           <p className={`${isDark ? 'text-gray-300' : 'text-gray-400'} text-base`}>
             Protect your transactions with AI-powered card fraud detection
