@@ -165,7 +165,7 @@ const Navbar = () => {
           <div className="lg:hidden fixed inset-0 z-50">
             {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-black bg-opacity-50"
+              className="absolute inset-0  bg-opacity-50"
               onClick={() => setIsMenuOpen(false)}
             ></div>
 
