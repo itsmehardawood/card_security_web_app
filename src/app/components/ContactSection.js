@@ -31,21 +31,21 @@ const ContactSection = () => {
               <p className="text-gray-600 text-sm mb-2">
                 Ready to start? Talk to our sales team.
               </p>
-              <p className="text-blue-600 font-medium">sales@fintech.com</p>
+              <p className="text-blue-600 font-medium">support@cardnest.io</p>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">Support</h4>
               <p className="text-gray-600 text-sm mb-2">
                 Need help? Our support team is here.
               </p>
-              <p className="text-blue-600 font-medium">support@fintech.com</p>
+              <p className="text-blue-600 font-medium">support@cardnest.io</p>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">Press</h4>
               <p className="text-gray-600 text-sm mb-2">
                 Media inquiries and press resources.
               </p>
-              <p className="text-blue-600 font-medium">press@fintech.com</p>
+              <p className="text-blue-600 font-medium">support@cardnest.io</p>
             </div>
           </div>
         </div>

@@ -34,47 +34,47 @@ const FAQItem = ({ question, answer }) => {
 
 function FAQs() {
   const faqData = [
-    {
-      question: "How does pricing work?",
-      answer:
-        "Our pricing is simple and transparent. You only pay for successful transactions with no setup fees, monthly fees, or hidden costs. Standard plan is 2.9% + 30¢ per transaction for domestic cards.",
-    },
-    {
-      question: "What's included in the Standard plan?",
-      answer:
-        "The Standard plan includes fraud prevention, checkout optimization tools, payment method support for all major cards and digital wallets, basic analytics, and email support. Perfect for small to medium businesses.",
-    },
-    {
-      question: "When should I consider the Premium plan?",
-      answer:
-        "Premium is ideal for growing businesses that need priority support, advanced analytics, custom reporting, and higher API limits. It includes everything in Standard plus 24/7 support and advanced dashboard features.",
-    },
-    {
-      question: "What makes Custom pricing different?",
-      answer:
-        "Custom pricing is designed for high-volume businesses with specific needs. It includes volume discounts, dedicated account management, custom integrations, and specialized features. Contact our sales team for a personalized quote.",
-    },
-    {
-      question: "Are there any setup or monthly fees?",
-      answer:
-        "No! We don't charge setup fees, monthly fees, or any hidden costs. You only pay for successful transactions. This makes it easy to get started and scale as your business grows.",
-    },
-    {
-      question: "What payment methods do you support?",
-      answer:
-        "We support all major credit and debit cards (Visa, Mastercard, American Express), digital wallets (Apple Pay, Google Pay), bank transfers, and many local payment methods depending on your region.",
-    },
-    {
-      question: "How secure is your platform?",
-      answer:
-        "Security is our top priority. We're PCI-DSS Level 1 certified, use end-to-end encryption, and employ advanced AI-powered fraud detection. Your customers' data is never stored on our servers after processing.",
-    },
-    {
-      question: "Can I switch plans anytime?",
-      answer:
-        "Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and you'll only be charged the new rate for transactions processed after the change.",
-    },
-  ];
+  {
+    question: "What is CardNest and how does it work?",
+    answer: "CardNest is an AI-powered fraud prevention platform that secures online credit and debit card transactions in real-time. It uses machine learning, behavioral analytics, and advanced fraud modeling to detect and stop suspicious transactions before they are authorized—ensuring only legitimate payments are processed."
+  },
+  {
+    question: "How does CardNest prevent online fraud before a transaction is completed?",
+    answer: "CardNest's Card-At-Present engine scans, detects, and analyzes user behavior, device identity, geolocation, and thousands of transaction data points in milliseconds. It builds a risk profile for each transaction and prevents potential fraud attempts instantly—unlike traditional systems that act only after a chargeback."
+  },
+  {
+    question: "Does CardNest store any customer or cardholder data?",
+    answer: "No. CardNest operates on a zero-data storage model. It does not retain card numbers, CVV, or any personally identifiable information. All fraud detection happens in real-time, helping your business remain PCI DSS–compliant and privacy-focused, and data is encrypted and processed on the client's infrastructure."
+  },
+  {
+    question: "Can CardNest be integrated with any payment gateway or e-commerce platform?",
+    answer: "Yes. CardNest is designed with API-first architecture and supports easy integration with most payment gateways, merchant systems, business systems, custom checkout flows, and more."
+  },
+  {
+    question: "How accurate is CardNest in detecting fraud?",
+    answer: "CardNest delivers up to 98% or more reduction in chargebacks, with highly accurate fraud detection and minimal false positives. Its AI constantly learns from new transaction data to improve accuracy and adapt to new fraud tactics."
+  },
+  {
+    question: "What happens if a legitimate credit or debit card is blocked?",
+    answer: "CardNest minimizes false positives through smart behavioral analytics and custom risk thresholds and confidence scores. Businesses can adjust settings or route flagged transactions to a manual review queue, ensuring genuine customers aren't unintentionally blocked."
+  },
+  {
+    question: "Is CardNest suitable for small businesses or only for enterprises?",
+    answer: "CardNest is scalable for all business sizes. Whether you process hundreds or millions of transactions monthly, CardNest adapts to your transaction volume and grows with your business."
+  },
+  {
+    question: "How much does CardNest cost?",
+    answer: "CardNest offers flexible billing options based on transaction volume and features needed. Pricing plans typically include pay-as-you-go (per Security API Scan), monthly subscription tiers, and enterprise packages with volume-based discounts. Custom pricing is available for high-volume clients. Contact support at support@cardnest.io for a tailored quote."
+  },
+  {
+    question: "Do I need a developer to set up CardNest?",
+    answer: "For most businesses, integration is simple and well-documented. However, a developer may be needed to plug the API into your payment flow. CardNest provides full onboarding support, technical documentation, and developer tools to streamline setup."
+  },
+  {
+    question: "How do I get started with CardNest?",
+    answer: "Visit www.cardnest.io to request a free demo or sign up. After onboarding, you'll receive API credentials, integration support, and access to the CardNest dashboard to monitor security performance and fraud analytics."
+  }
+];
 
   return (
     <section className="my-5 sm:my-5">

@@ -456,26 +456,31 @@ const setStoredAuth = (token, user, remember) => {
 
       const data = await response.json()
 
-      if (response.ok && data.status) {
-        console.log('Login successful:', data)
-        
-        // Store authentication data using the remember me preference
-        setStoredAuth(data.token, data.user, rememberMe)
+    if (response.ok && data.status) {
+  console.log('Login successful:', data);
 
-        // Optional: Store additional login preferences
-        if (rememberMe && isClient) {
-          try {
-            localStorage.setItem('rememberLogin', 'true')
-            localStorage.setItem('savedEmail', emailOrPhone)
-            localStorage.setItem('savedCountryCode', formData.countryCode)
-          } catch (error) {
-            console.error('Error saving remember preference:', error)
-          }
-        }
+  // ✅ Save the user data in localStorage for dashboard access
+  const userData = {
+    token: data.token,
+    user: data.user, // contains name, email, etc.
+  };
 
-        // Redirect to dashboard
-        router.push('/dashboard')
-      } else {
+  localStorage.setItem('userData', JSON.stringify(userData));
+
+  // Continue with existing logic
+  if (rememberMe && isClient) {
+    try {
+      localStorage.setItem('rememberLogin', 'true');
+      localStorage.setItem('savedEmail', emailOrPhone);
+      localStorage.setItem('savedCountryCode', formData.countryCode);
+    } catch (error) {
+      console.error('Error saving remember preference:', error);
+    }
+  }
+
+  // Redirect to dashboard
+  router.push('/dashboard');
+}else {
         setOtpError(data.message || 'Invalid OTP. Please try again.')
       }
     } catch (err) {

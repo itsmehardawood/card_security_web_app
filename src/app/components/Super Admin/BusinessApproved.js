@@ -5,22 +5,37 @@ const BusinessApprovalSection = () => {
   const [businesses, setBusinesses] = useState([]);
   const [approvedBusinesses, setApprovedBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [approvedLoading, setApprovedLoading] = useState(false);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [notification, setNotification] = useState(null);
   const [activeTab, setActiveTab] = useState('pending');
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [showRejectForm, setShowRejectForm] = useState(false);
 
-  // Fetch both pending and approved businesses on page load
+  // Fetch businesses on page load
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
         const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile');
         const data = await response.json();
             
-        setBusinesses(data.data);
+        if (data.status) {
+          // Separate pending and approved businesses
+          const allBusinesses = data.data;
+          const pending = allBusinesses.filter(business => {
+            const status = business.user.business_verified;
+            return status === 0 || status === "0" || status === null || status === "PENDING";
+          });
+          const approved = allBusinesses.filter(business => {
+            const status = business.user.business_verified;
+            return status === 1 || status === "1" || status === "APPROVED";
+          });
+          
+          setBusinesses(pending);
+          setApprovedBusinesses(approved);
+        }
       } catch (error) {
         console.error('Error fetching businesses:', error);
         showNotification('Error fetching businesses', 'error');
@@ -29,26 +44,7 @@ const BusinessApprovalSection = () => {
       }
     };
 
-    const fetchApprovedBusinesses = async () => {
-      try {
-        const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile/approved');
-        const data = await response.json();
-        
-        if (data.status) {
-          setApprovedBusinesses(data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching approved businesses:', error);
-        showNotification('Error fetching approved businesses', 'error');
-      }
-    };
-
-    // Fetch both datasets on component mount
-    const fetchAllData = async () => {
-      await Promise.all([fetchBusinesses(), fetchApprovedBusinesses()]);
-    };
-
-    fetchAllData();
+    fetchBusinesses();
   }, []);
 
   const handleTabChange = (tab) => {
@@ -125,6 +121,8 @@ const BusinessApprovalSection = () => {
   const handleViewDocument = (business) => {
     setSelectedBusiness(business);
     setIsModalOpen(true);
+    setShowRejectForm(false);
+    setRejectReason('');
   };
 
   const handleApprove = async (businessId) => {
@@ -137,7 +135,8 @@ const BusinessApprovalSection = () => {
         },
         body: JSON.stringify({
           user_id: selectedBusiness.user.id,
-          status: 1 // 1 for approve
+          status: 'APPROVED',
+          reason: 'Business profile approved after verification'
         })
       });
 
@@ -146,28 +145,17 @@ const BusinessApprovalSection = () => {
       if (response.ok && data.status) {
         showNotification(data.message || 'Business approved successfully', 'success');
         
-        // Update the local state to reflect the approval
+        // Remove from pending businesses and add to approved
         setBusinesses(prevBusinesses => 
-          prevBusinesses.map(business => 
-            business.id === businessId 
-              ? { ...business, user: { ...business.user, business_verified: 1 } }
-              : business
-          )
+          prevBusinesses.filter(business => business.id !== businessId)
         );
         
-        // Reset approved businesses to refetch when needed
-        const refreshApprovedBusinesses = async () => {
-          try {
-            const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile/approved');
-            const data = await response.json();
-            if (data.status) {
-              setApprovedBusinesses(data.data);
-            }
-          } catch (error) {
-            console.error('Error refreshing approved businesses:', error);
-          }
+        // Add to approved businesses
+        const approvedBusiness = { 
+          ...selectedBusiness, 
+          user: { ...selectedBusiness.user, business_verified: 1 }
         };
-        refreshApprovedBusinesses();
+        setApprovedBusinesses(prevApproved => [...prevApproved, approvedBusiness]);
         
         setIsModalOpen(false);
       } else {
@@ -181,7 +169,16 @@ const BusinessApprovalSection = () => {
     }
   };
 
+  const handleRejectClick = () => {
+    setShowRejectForm(true);
+  };
+
   const handleReject = async (businessId) => {
+    if (!rejectReason.trim()) {
+      showNotification('Please provide a reason for rejection', 'error');
+      return;
+    }
+
     setActionLoading(true);
     try {
       const response = await fetch('https://cardsecuritysystem-8xdez.ondigitalocean.app/api/business-profile/decision', {
@@ -191,16 +188,17 @@ const BusinessApprovalSection = () => {
         },
         body: JSON.stringify({
           user_id: selectedBusiness.user.id,
-          status: 2 // 2 for reject
+          status: 'INCOMPLETE',
+          reason: rejectReason.trim()
         })
       });
 
       const data = await response.json();
 
       if (response.ok && data.status) {
-        showNotification(data.message || 'Business rejected successfully', 'success');
+        showNotification(data.message || 'Business marked as incomplete successfully', 'success');
         
-        // Update the local state to reflect the rejection
+        // Update the business status in the list
         setBusinesses(prevBusinesses => 
           prevBusinesses.map(business => 
             business.id === businessId 
@@ -210,30 +208,35 @@ const BusinessApprovalSection = () => {
         );
         
         setIsModalOpen(false);
+        setShowRejectForm(false);
+        setRejectReason('');
       } else {
-        throw new Error(data.message || 'Failed to reject business');
+        throw new Error(data.message || 'Failed to mark business as incomplete');
       }
     } catch (error) {
       console.error('Error rejecting business:', error);
-      showNotification(error.message || 'Failed to reject business', 'error');
+      showNotification(error.message || 'Failed to mark business as incomplete', 'error');
     } finally {
       setActionLoading(false);
     }
   };
 
   const getStatusBadge = (verified) => {
-    if (verified === 1) {
+    // Handle both string and number values
+    const status = String(verified).toUpperCase();
+    
+    if (status === "1" || status === "APPROVED") {
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
           <CheckCircle className="w-3 h-3 mr-1" />
           Approved
         </span>
       );
-    } else if (verified === 2) {
+    } else if (status === "2" || status === "INCOMPLETE") {
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
           <XCircle className="w-3 h-3 mr-1" />
-          Rejected
+          Incomplete
         </span>
       );
     } else {
@@ -246,7 +249,7 @@ const BusinessApprovalSection = () => {
     }
   };
 
-  const renderBusinessTable = (businessList, showActions = true) => (
+  const renderBusinessTable = (businessList) => (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
@@ -381,7 +384,7 @@ const BusinessApprovalSection = () => {
           >
             <div className="flex items-center justify-center">
               <Calendar className="w-4 h-4 mr-2" />
-              Pending Approval ({businesses.filter(b => b.user.business_verified !== 1).length})
+              Pending Approval ({businesses.length})
             </div>
           </button>
           <button
@@ -404,7 +407,7 @@ const BusinessApprovalSection = () => {
       {activeTab === 'pending' && (
         <>
           {businesses.length > 0 ? (
-            renderBusinessTable(businesses, true)
+            renderBusinessTable(businesses)
           ) : (
             renderEmptyState(
               'No Pending Requests',
@@ -418,7 +421,7 @@ const BusinessApprovalSection = () => {
       {activeTab === 'approved' && (
         <>
           {approvedBusinesses.length > 0 ? (
-            renderBusinessTable(approvedBusinesses, false)
+            renderBusinessTable(approvedBusinesses)
           ) : (
             renderEmptyState(
               'No Approved Businesses',
@@ -480,6 +483,14 @@ const BusinessApprovalSection = () => {
                     {selectedBusiness.country}
                   </p>
                 </div>
+
+                {/* Show verification reason if exists */}
+                {selectedBusiness.user.verification_reason && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <label className="block text-sm font-medium text-red-800 mb-1">Previous Verification Notes</label>
+                    <p className="text-sm text-red-700">{selectedBusiness.user.verification_reason}</p>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Registration Document</label>
@@ -550,31 +561,67 @@ const BusinessApprovalSection = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Reject Reason Form */}
+                {showRejectForm && (
+                  <div className="border border-red-200 bg-red-50 rounded-lg p-4">
+                    <label className="block text-sm font-medium text-red-800 mb-2">
+                      Reason for marking as rejected *
+                    </label>
+                    <textarea
+                      value={rejectReason}
+                      onChange={(e) => setRejectReason(e.target.value)}
+                      className="w-full px-3 py-2 border border-red-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      rows="3"
+                      placeholder="Please provide a detailed reason for marking this business profile as rejected..."
+                      required
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Show action buttons only for pending businesses */}
-              {activeTab === 'pending' && selectedBusiness.user.business_verified !== 1 && (
+              {activeTab === 'pending' && (
                 <div className="flex items-center justify-end space-x-4 mt-6 pt-4 border-t border-gray-200">
                   <button
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setShowRejectForm(false);
+                      setRejectReason('');
+                    }}
                     disabled={actionLoading}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>
 
-                  <button
-                    onClick={() => handleReject(selectedBusiness.id)}
-                    disabled={actionLoading}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {actionLoading ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    ) : (
+                  {!showRejectForm ? (
+
+
+
+                    
+                    <button
+                      onClick={handleRejectClick}
+                      disabled={actionLoading}
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                       <XCircle className="h-4 w-4 mr-2" />
-                    )}
-                    Reject
-                  </button>
+                      Reject
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleReject(selectedBusiness.id)}
+                      disabled={actionLoading || !rejectReason.trim()}
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {actionLoading ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      ) : (
+                        <XCircle className="h-4 w-4 mr-2" />
+                      )}
+                      Confirm Reject
+                    </button>
+                  )}
                   
                   <button
                     onClick={() => handleApprove(selectedBusiness.id)}

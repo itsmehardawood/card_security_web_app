@@ -448,24 +448,21 @@ const handleSubmit = async (e) => {
             {/* Content Blocks */}
             <div className=" text-black space-y-5 md:space-y-12">
               <div>
-                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Get started quickly</h3>
+                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Get Secured Fast</h3>
                 <p className=" leading-relaxed  text-[10px] md:text-[13px] w-[80%] drop-shadow-md">
-                  Integrate with developer-friendly APIs or choose low-code or pre-built solutions.
-                </p>
+Quickly deploy fraud protection solution with developer-friendly APIs for rapid implementation—no complex setup required and fewer API integration calls.                </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Support any business model</h3>
+                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Protect Any Business Model</h3>
                 <p className=" leading-relaxed  text-[10px]  md:text-[13px] w-[80%] drop-shadow-md">
-                  Ecommerce, subscriptions, SaaS platforms, marketplaces, and more—all within a unified platform.
-                </p>
+Whether you are running eCommerce, subscriptions, remittance services, SaaS platforms, or digital marketplaces, Bank CardNest provides a unified fraud prevention engine built to adapt to your business.                </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Join millions of businesses</h3>
+                <h3 className="text-sm font-semibold  mb-2 drop-shadow-lg">Trusted by Growing Businesses Worldwide</h3>
                 <p className=" leading-relaxed text-[10px]  md:text-[13px] w-[80%] drop-shadow-md">
-                  Stripe is trusted by ambitious startups and enterprises of every size.
-                </p>
+From fast-scaling startups to established enterprises, CardNest is trusted by businesses around the globe to protect online payments, prevent chargebacks, and safeguard customer trust.                </p>
               </div>
             </div>
           </div>

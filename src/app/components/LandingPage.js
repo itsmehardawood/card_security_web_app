@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import DiagonalHeroSection from "./HeroSection";
 import Link from "next/link";
@@ -8,6 +8,17 @@ import PricingSection from "./SubscriptionsCard";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -21,61 +32,73 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-transparent absolute w-full p-3 lg:pt-2  top-0 z-50">
+    <nav className={`fixed w-full p-3 lg:pt-2 top-0 z-50 transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white/95 backdrop-blur-md shadow-lg' 
+        : 'bg-transparent'
+    }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:max-w-6xl">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <div className="text-xl sm:text-2xl font-bold text-white">  
- <video autoPlay loop muted playsInline width="70">
-      <source src="/videos/cardnest.webm" type="video/webm" />
-      Your browser does not support the video tag.
-    </video>            </div>
+          <div className="text-xl sm:text-2xl font-bold">  
+            <video autoPlay loop muted playsInline width="70">
+              <source src="/videos/cardnest.webm" type="video/webm" />
+              Your browser does not support the video tag.
+            </video>            
+          </div>
 
           {/* Desktop Navigation - Only show on large screens */}
           <div className="hidden lg:flex space-x-8">
             <button
               onClick={() => scrollToSection("hero")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Home
             </button>
 
-              <button
+            <button
               onClick={() => scrollToSection("about")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               About
             </button>
 
-
-              <button
+            <button
               onClick={() => scrollToSection("benefits")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Benefits
             </button>
 
-
-                <button
+            <button
               onClick={() => scrollToSection("pricing")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Pricing
             </button>
+
             <button
               onClick={() => scrollToSection("features")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Features
             </button>
-          
-          
-
-         
 
             <button
               onClick={() => scrollToSection("contact")}
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Contact
             </button>
@@ -85,13 +108,19 @@ const Navbar = () => {
           <div className="hidden lg:block space-x-5">
             <Link
               href="/login"
-              className="text-white hover:text-teal-300 transition-colors duration-200 font-medium mr-6"
+              className={`hover:text-teal-600 transition-colors duration-200 font-medium mr-6 ${
+                isScrolled ? 'text-gray-800' : 'text-white hover:text-teal-300'
+              }`}
             >
               Sign In
             </Link>
             <Link
-href= "/signup"
-              className="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg"
+              href="/signup"
+              className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
+                isScrolled 
+                  ? 'bg-teal-600 text-white hover:bg-teal-700' 
+                  : 'bg-white text-teal-600 hover:bg-gray-100'
+              }`}
             >
               Get Started
             </Link>
@@ -101,7 +130,9 @@ href= "/signup"
           <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-teal-300 focus:outline-none p-2"
+              className={`focus:outline-none p-2 transition-colors duration-200 ${
+                isScrolled ? 'text-gray-800 hover:text-teal-600' : 'text-white hover:text-teal-300'
+              }`}
             >
               <svg
                 className="w-6 h-6"
@@ -134,7 +165,7 @@ href= "/signup"
           <div className="lg:hidden fixed inset-0 z-50">
             {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-opacity-50"
+              className="absolute inset-0 bg-black bg-opacity-50"
               onClick={() => setIsMenuOpen(false)}
             ></div>
 
@@ -146,7 +177,7 @@ href= "/signup"
             >
               {/* Sidebar Header */}
               <div className="flex justify-between items-center p-6 border-b border-gray-700">
-                <div className="text-xl font-bold text-white">Card App</div>
+                <div className="text-xl font-bold text-white">CardNest</div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="text-white hover:text-teal-300 p-2 transition-colors duration-200"
@@ -194,7 +225,7 @@ href= "/signup"
                   About
                 </button>
 
-                  <button
+                <button
                   onClick={() => scrollToSection("pricing")}
                   className="text-left text-white hover:text-teal-300 hover:bg-gray-800 transition-all duration-200 font-medium py-4 px-4 rounded-lg"
                 >
@@ -263,21 +294,103 @@ const LandingPage = () => {
       seeAlso: "Invoicing for invoice creation, collection, and tracking Usage-based billing for metering, billing, and consumption insights Sigma for custom revenue reports—no SQL required",
       media: null
     },
-    connect: {
-      title: "Benefits",
-      heading: "Set up multiparty payments and payouts",
-      description: "Integrate payments into your platform or marketplace for end-to-end payments experiences.",
-      seeAlso: "Terminal for custom in-person payments Instant Payouts for fast payments to users Payment Elements for customizable UIs",
-      media: null
+ connect: {
+  title: "Benefits of CardNest",
+  heading: "Why Businesses Trust Us",
+  description: "",
+  media: null,
+  features: [
+    {
+      title: "Real-Time Fraud Prevention",
+      description: "CardNest detects and stops online fraudulent card transactions before they occur—unlike traditional systems that only respond after chargebacks or losses. This proactive approach significantly reduces fraud exposure and saves businesses from losing revenue or shutting down."
     },
-    issuing: {
-      title: "Issuing",
-      heading: "Build a fintech offering with banking-as-a-service",
-      description: "Launch, manage, and scale a commercial card program without any setup fees.",
-      seeAlso: "Treasury for financial accounts Capital for offering fast, flexible financing Connect for powering platform payments",
-      media: null,
-      darkMode: true
+    {
+      title: "Advanced AI and Machine Learning",
+      description: "The CardNest Security Scan engine uses intelligent behavioral models, pattern recognition, and anomaly detection to identify suspicious activity in milliseconds, improving accuracy with every transaction processed and ensuring the card being used belongs to the actual owner."
+    },
+    {
+      title: "Saves Up to 98% or More Reduction in Chargebacks",
+      description: "Businesses using CardNest have reported dramatic reductions in chargeback volume. By blocking fraudulent transactions at the source, merchants can retain more revenue and avoid costly disputes."
+    },
+    {
+      title: "Simple API Integration (Setup in a Few Hours)",
+      description: "CardNest can be easily integrated into existing platforms, including e-commerce sites, payment gateways, remittance services, and banking systems—with minimal development effort and maximum compatibility."
+    },
+    {
+      title: "No Storage of Sensitive Data",
+      description: "CardNest performs Real-Time intelligence scanning and verification without storing cardholder information, ensuring user privacy and reducing the risks associated with data breaches or regulatory non-compliance."
+    },
+    {
+      title: "PCI DSS–Compliant Security Infrastructure",
+      description: "Built to the highest global payment security standards, CardNest helps businesses maintain compliance and avoid penalties associated with non-compliant transaction systems. All data, both in transit and at rest, is encrypted with maximum security protocols."
+    },
+    {
+      title: "Adaptive and Scalable Technology",
+      description: "As fraud tactics evolve, CardNest's self-learning algorithms adapt in real time—making it a future-proof solution for both small businesses and large enterprises processing high transaction volumes."
+    },
+    {
+      title: "Enhanced Customer Trust and Satisfaction",
+      description: "By preventing fraud and reducing false declines, CardNest helps businesses deliver a safer and smoother customer experience, building loyalty and strengthening brand reputation."
     }
+  ]
+},
+  features: {
+  title: "Comprehensive Features of CardNest ",
+  heading: "Build a fintech offering with banking-as-a-service",
+  description: "Launch, manage, and scale a commercial card program without any setup fees.",
+  media: null,
+  darkMode: true,
+  features: [
+    {
+      title: "Card-At-Present (CAP) Intelligence Engine",
+      description: "Simulates physical card presence in online transactions by analyzing user card security features, building intelligence around card behavior, device signals, and transaction context to validate cardholder identity."
+    },
+    {
+      title: "Real-Time Transaction Security Scanning, Detection, and Prevention",
+      description: "Performs instant, pre-authorization fraud detection within milliseconds—preventing suspicious transactions before they're approved."
+    },
+    {
+      title: "Machine Learning Behavioral Modeling",
+      description: "Learns and analyzes cardholder behavior, patterns, and motion data to detect deviations that signal fraud, improving detection accuracy over time."
+    },
+    {
+      title: "Anomaly and Pattern Recognition",
+      description: "Identifies abnormal transaction trends, geographic mismatches, inconsistent device usage, and other red flags across thousands of data points."
+    },
+    {
+      title: "Zero Data Storage Technology",
+      description: "Performs all security operations in real-time without storing cardholder data, ensuring full compliance with PCI DSS and data protection standards."
+    },
+    {
+      title: "API-First Integration",
+      description: "Offers a lightweight, developer-friendly API that integrates seamlessly with payment gateways, mobile apps, e-commerce stores, and financial platforms within a few hours."
+    },
+    {
+      title: "Multi-Layered Fraud Detection Architecture",
+      description: "Combines biometric analytics, card validation, transaction velocity checks, and AI insights to assess and mitigate fraud risk from multiple vectors."
+    },
+    {
+      title: "Global Transaction Intelligence",
+      description: "Uses a distributed network and real-time transaction datasets across multiple countries to improve fraud models and detect global fraud patterns."
+    },
+    {
+      title: "Customizable Risk Scoring Engine",
+      description: "Assigns a dynamic fraud confidence score to each transaction, allowing businesses to set custom thresholds, automate approvals/declines, or trigger manual reviews."
+    },
+    {
+      title: "Adaptive Learning System",
+      description: "Continuously trains its AI models using real-time data and evolving fraud trends, ensuring the system stays ahead of emerging attack methods."
+    },
+    {
+      title: "False Positive Minimization",
+      description: "Fine-tuned algorithms reduce the likelihood of blocking legitimate transactions—maintaining customer satisfaction, and maximize conversions."
+    },
+    {
+      title: "Identity & Behavioral Biometrics",
+      description: "Tracks user interactions such as typing speed, mouse movement, and screen behavior to enhance cardholder verification without friction. Visual analytics tools give merchants insights into fraud attempts, successful blocks, and chargeback trends—helping drive strategic decisions."
+    }
+  ]
+}
   };
 
 
@@ -286,9 +399,38 @@ const LandingPage = () => {
 
 
   // Component to render section content
-  const SectionContent = ({ data, isDark = false }) => {
-    return (
-      <div className={`flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-10 lg:py-10 px-4 sm:px-6`}>
+const SectionContent = ({ data, isDark = false }) => {
+  const shouldDivideFeatures = data.features && data.features.length > 7;
+  const leftFeatures = shouldDivideFeatures ? data.features.slice(0, 6) : data.features;
+  const rightFeatures = shouldDivideFeatures ? data.features.slice(6, 12) : [];
+
+  const FeatureItem = ({ feature, index }) => (
+    <div key={index} className="flex items-start space-x-3">
+      <div className={`flex-shrink-0 w-5 h-5 rounded-full ${
+        isDark ? 'bg-green-500' : 'bg-green-600'
+      } flex items-center justify-center mt-1`}>
+        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      </div>
+      <div className="flex-1">
+        <h4 className={`font-bold text-base sm:text-lg ${
+          isDark ? 'text-white' : 'text-gray-900'
+        } mb-2`}>
+          {feature.title}
+        </h4>
+        <p className={`text-sm sm:text-base ${
+          isDark ? 'text-gray-300' : 'text-gray-600'
+        }`}>
+          {feature.description}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={`w-full ${isDark ? 'bg-slate-900' : ''}`}>
+      <div className="flex flex-col lg:flex-row max-w-6xl mx-auto justify-center py-10 lg:py-10 px-4 sm:px-6">
         <div className="w-full text-center lg:text-left space-y-6">
           <h3 className={`${isDark ? 'text-blue-400' : 'text-blue-500'} font-bold text-lg`}>
             {data.title}
@@ -303,8 +445,39 @@ const LandingPage = () => {
           } max-w-3xl`}>
             {data.description}
           </p>
+          
+          {/* Features Section */}
+          {data.features && (
+            <div className="mt-8">
+              {shouldDivideFeatures ? (
+                // Two column layout for more than 7 features
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Left column */}
+                  <div className="space-y-4">
+                    {leftFeatures.map((feature, index) => (
+                      <FeatureItem key={index} feature={feature} index={index} />
+                    ))}
+                  </div>
+                  {/* Right column */}
+                  <div className="space-y-4">
+                    {rightFeatures.map((feature, index) => (
+                      <FeatureItem key={index + 6} feature={feature} index={index + 6} />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                // Single column layout for 7 or fewer features
+                <div className="space-y-4">
+                  {leftFeatures.map((feature, index) => (
+                    <FeatureItem key={index} feature={feature} index={index} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          
           {data.seeAlso && (
-            <div className="space-y-3">
+            <div className="space-y-3 mt-8">
               <p className={`font-bold text-sm sm:text-base ${isDark ? 'text-white' : 'text-black'}`}>
                 See also
               </p>
@@ -317,8 +490,9 @@ const LandingPage = () => {
           )}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   return (
     <div className="min-h-screen bg-white">
@@ -331,73 +505,47 @@ const LandingPage = () => {
       </section>
 
         {/* About Us Section */}
-      <section id="about" className="py-10 mb-5 lg:py-10 px-6 bg-gray-100">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8 text-gray-900">About Us</h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <p className="text-lg text-gray-600 leading-relaxed">
-              We are passionate innovators dedicated to creating solutions that
-              transform the way you work. Our team combines cutting-edge
-              technology with deep industry expertise to deliver products that
-              exceed expectations and drive real results.
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              With years of experience and a commitment to excellence, we are
-              here to help you unlock your full potential and achieve your
-              goals.
-            </p>
-          </div>
-        </div>
-      </section>
+      <section id="about" className="py-8 px-6  bg-gray-100 w-full">
+  <div className="container mx-auto text-center">
+    <h2 className="text-3xl font-bold mb-6 text-gray-900">About Us</h2>
+    <div className="max-w-6xl mx-auto space-y-4">
+      <p className="text-base text-gray-600 leading-relaxed">
+        <strong>CardNest</strong> is a cutting-edge financial technology company dedicated to transforming how businesses protect themselves and their customers from online card fraud. Founded on the principle that transaction security should be proactive, not reactive, CardNest leverages advanced artificial intelligence and machine learning to detect and prevent fraudulent card activity before it occurs—empowering businesses of all sizes to operate with confidence in a digital-first economy. As online commerce and digital payments continue to scale globally, so too does the threat of payment fraud. In response, CardNest has a robust, real-time fraud prevention technology designed to scan, detect, analyze, and prevent fraudulent activity before a transaction even begins—within milliseconds—without disrupting the customer experience.
+      </p>
+      
+      <p className="text-base text-gray-600 leading-relaxed">
+        At the core of our platform is the <strong>CardNest Card-At-Present (CAP) engine</strong>, a multi-layered security technology that uses deep learning behavioral modeling, pattern recognition, and anomaly detection to confirm cardholder legitimacy. Our Artificial Intelligence models continuously analyze thousands of data points, including card security features, transaction history, device fingerprinting, location consistency, behavioral biometrics, and more—enabling our system to flag suspicious transactions with unparalleled accuracy before payment checkout happens.
+      </p>
+
+      <p className="text-base text-gray-600 leading-relaxed">
+        CardNest security architecture is <strong>PCI/DSS compliant</strong>, ensuring that all processes meet the highest global standards for payment data protection. Importantly, CardNest does not store <strong>sensitive cardholder information.</strong> All analysis and validation are performed in real-time, minimizing risk and maximizing user privacy. Designed with developers and businesses in mind, CardNest offers a <strong>simple, API-based integration</strong> that seamlessly connects to any existing payment gateway, merchants systems, e-commerce platform, remittance businesses, or banking infrastructure. Whether you are a startup or an enterprise-scale institution, CardNest adapts to your needs—scaling protection as your transaction volume grows. Our technology is currently trusted by businesses across financial services, e-commerce, digital remittance, and SaaS industries. Organizations using CardNest have seen <strong>up to a 98% or more reduction in chargebacks</strong>, increased customer trust, and significant improvements in operational efficiency and revenue retention. At CardNest, we are not just building fraud detection software—we are redefining what it means to transact safely online. By staying ahead of emerging fraud tactics and continuously evolving our Artificial Intelligence capabilities, we help our clients maintain integrity, protect customer trust, and accelerate secure digital growth.
+      </p>
+    </div>
+  </div>
+</section>
 
        {/* Connect Section */}
       <section id="benefits" className="bg-white">
-        <SectionContent data={sectionsData.connect} />
+        <SectionContent data={sectionsData.connect} isDark={true}/>
       </section>
 
          {/* Pricing Section */}
       <section id="pricing">
-        <PricingSection />
+        <PricingSection isDark={true} />
       </section>
 
-      {/* Modular Solutions Section
-      <section className="py-10 lg:py-10 bg-white">
-        <div className="flex flex-col max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center lg:text-left space-y-6">
-            <h3 className="text-blue-500 font-bold text-lg">{sectionsData.modular.title}</h3>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-              {sectionsData.modular.heading}
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-4xl">
-              {sectionsData.modular.description}
-            </p>
-          </div>
-        
 
-        </div>
-      
-       
-      </section> */}
+        {/* Pricing Section */}
+      <section id="features">
+        <SectionContent data={sectionsData.features} />
+      </section>
+
 
    
-      {/* Billing Section */}
-      {/* <section className="bg-slate-950">
-        <SectionContent data={sectionsData.billing}  isDark={true} />
-      </section> */}
-
-         {/* Payments Section */}
-      <section id="features" className="bg-white">
-        <SectionContent data={sectionsData.payments} />
-      </section>
-
-
-     
-
-      {/* Issuing Section with Dark Background */}
-      <section className="bg-slate-950">
-        <SectionContent data={sectionsData.issuing} isDark={true} />
-      </section>
-
+  <section> 
+         <FAQs/>
+         
+         </section>
    
 
     
@@ -407,10 +555,7 @@ const LandingPage = () => {
         <ContactSection />
       </section>
 
-         <section> 
-         <FAQs/>
-         
-         </section>
+       
 
 
 
